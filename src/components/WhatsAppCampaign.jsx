@@ -69,8 +69,7 @@ export default function WhatsAppCampaign() {
   const [jobs, setJobs] = useState([]);
   const [generatedMessage, setGeneratedMessage] = useState("");
   const [testNumber, setTestNumber] = useState("");
-  const [ctaLink, setCtaLink] = useState("https://retailmind.local/promo");
-  const [maxRecipients, setMaxRecipients] = useState(20);
+  const [ctaLink, setCtaLink] = useState("Balas INFO untuk dibantu admin");
   const [isGenerating, setIsGenerating] = useState(false);
   const [promoDetails, setPromoDetails] = useState("");
   const [loading, setLoading] = useState(true);
@@ -82,8 +81,21 @@ export default function WhatsAppCampaign() {
   const [demoOpen, setDemoOpen] = useState(false);
   const [demoLoading, setDemoLoading] = useState(false);
   const [demoResults, setDemoResults] = useState(null);
-  const [demoCta, setDemoCta] = useState("https://retailmind.local/promo");
+  const [demoCta, setDemoCta] = useState("Balas INFO untuk dibantu admin");
   const [demoPromo, setDemoPromo] = useState("");
+
+  const messageChars = generatedMessage.length;
+  const emojiCount = (generatedMessage.match(/[\p{Emoji_Presentation}\p{Extended_Pictographic}]/gu) || []).length;
+  const hasOptOut = /STOP|BERHENTI|UNSUBSCRIBE|tidak ingin menerima/i.test(generatedMessage);
+  const hasNameToken = generatedMessage.includes("{name}");
+  const hasCtaToken = generatedMessage.includes("{cta_link}");
+  const qualityChecks = [
+    { label: `${messageChars}/400 chars`, ok: messageChars > 0 && messageChars <= 400, warn: messageChars > 400 },
+    { label: `${emojiCount} emoji`, ok: emojiCount <= 3, warn: emojiCount > 3 },
+    { label: hasOptOut ? "Opt-out present" : "Missing opt-out", ok: hasOptOut },
+    { label: hasNameToken ? "{name} token" : "Missing {name}", ok: hasNameToken },
+    { label: hasCtaToken ? "{cta_link} token" : "Missing {cta_link}", ok: hasCtaToken },
+  ];
 
   useEffect(() => {
     let cancelled = false;
@@ -116,7 +128,7 @@ export default function WhatsAppCampaign() {
   const finished = Number(totals.sent || 0) + Number(totals.delivered || 0) + Number(totals.read || 0) + Number(totals.failed || 0);
   const progress = totals.total ? Math.min(100, Math.round((finished / totals.total) * 100)) : 0;
 
-  const selectedIcon = useMemo(() => selectedSegment ? (iconMap[selectedSegment.id] || Users) : Users, [selectedSegment]);
+  const SelectedIcon = useMemo(() => selectedSegment ? (iconMap[selectedSegment.id] || Users) : Users, [selectedSegment]);
 
   async function handleSelectSegment(seg) {
     setError("");
@@ -141,7 +153,7 @@ export default function WhatsAppCampaign() {
       const result = await generateCopywritingPreview({
         segmentId: selectedSegment.id,
         segmentLabel: selectedSegment.label,
-        goal: selectedSegment.id === "champions" ? "Loyalty maintenance" : "Win-back and reactivation",
+        goal: selectedSegment.id === "high_value" ? "Loyalty maintenance" : "Win-back and reactivation",
         ctaLink,
         promoDetails: promoDetails || null,
       });
@@ -181,9 +193,9 @@ export default function WhatsAppCampaign() {
   async function createDraftCampaign() {
     return createCampaign({
       name: `${selectedSegment.label} WhatsApp Campaign`,
-      segmentFilter: { segmentId: selectedSegment.id, maxRecipients: Number(maxRecipients) || 50 },
-      goal: selectedSegment.id === "champions" ? "Loyalty maintenance" : "Win-back and reactivation",
-      campaignBrief: `Outbound WhatsApp untuk ${selectedSegment.label}. CTA: ${ctaLink}`,
+      segmentFilter: { segmentId: selectedSegment.id, maxRecipients: 1, ctaLink, demoMode: true },
+      goal: selectedSegment.id === "high_value" ? "Loyalty maintenance" : "Win-back and reactivation",
+      campaignBrief: `Demo-safe outbound WhatsApp untuk ${selectedSegment.label}. CTA: ${ctaLink}. Route ke 1 nomor perwakilan segmen.`,
       messageTemplate: generatedMessage.replaceAll("{cta_link}", ctaLink),
       createdBy: "admin",
     });
@@ -213,6 +225,40 @@ export default function WhatsAppCampaign() {
     if (!campaign) return;
     const updated = campaign.status === "paused" ? await resumeCampaign(campaign.id) : await pauseCampaign(campaign.id);
     setCampaign(updated);
+  }
+
+  function applyQuickRefine(type) {
+    const text = generatedMessage.trim();
+    if (!text) return;
+
+    if (type === "shorter") {
+      setGeneratedMessage(text.split(" ").slice(0, 45).join(" ") + (text.split(" ").length > 45 ? "..." : ""));
+      return;
+    }
+
+    if (type === "urgent") {
+      const urgentPrefix = "Jangan sampai terlewat, {name}! ";
+      setGeneratedMessage(text.startsWith("Jangan sampai") ? text : urgentPrefix + text);
+      return;
+    }
+
+    if (type === "warmer") {
+      setGeneratedMessage(text.replace(/^Halo|^Hai/i, "Hai {name}, semoga harimu menyenangkan!"));
+      return;
+    }
+
+    if (type === "optout" && !hasOptOut) {
+      setGeneratedMessage(`${text}\n\nBalas STOP jika tidak ingin menerima info promo.`);
+      return;
+    }
+
+    if (type === "cta" && !hasCtaToken) {
+      setGeneratedMessage(`${text}\nCek di sini: {cta_link}`);
+    }
+  }
+
+  function appendToken(token) {
+    setGeneratedMessage((prev) => `${prev}${prev.endsWith(" ") || !prev ? "" : " "}${token}`);
   }
 
   async function handleDemoBlast() {
@@ -285,7 +331,7 @@ export default function WhatsAppCampaign() {
 
         {step === 2 && selectedSegment && (
           <div>
-            <div className="flex items-center justify-between mb-6"><h3 className="text-xl font-bold text-[#1C1D36] flex items-center gap-2">{selectedIcon({ className: "w-5 h-5 text-amber-500" })} Preview: {selectedSegment.label}</h3><button onClick={() => setStep(1)} className="text-xs font-bold text-slate-500 hover:text-[#1C1D36]">Change Segment</button></div>
+            <div className="flex items-center justify-between mb-6"><h3 className="text-xl font-bold text-[#1C1D36] flex items-center gap-2"><SelectedIcon className="w-5 h-5 text-amber-500" /> Preview: {selectedSegment.label}</h3><button onClick={() => setStep(1)} className="text-xs font-bold text-slate-500 hover:text-[#1C1D36]">Change Segment</button></div>
             {loading || !preview ? <Loader2 className="animate-spin" /> : <>
               <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">
                 <div className="bg-slate-50 rounded-2xl p-4"><p className="text-[10px] font-bold text-slate-400 uppercase">Model Match</p><p className="text-2xl font-bold">{statValue(preview.totalModelMatches)}</p></div>
@@ -305,12 +351,43 @@ export default function WhatsAppCampaign() {
 
         {step === 3 && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div className="space-y-5"><h3 className="text-xl font-bold text-[#1C1D36]">Craft & Approve Message</h3><textarea value={generatedMessage} onChange={(e) => setGeneratedMessage(e.target.value)} className="w-full h-48 p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:border-amber-400 text-sm leading-relaxed" />
-              <input value={ctaLink} onChange={(e) => setCtaLink(e.target.value)} className="w-full p-3 bg-slate-50 border border-slate-100 rounded-xl text-sm outline-none focus:border-amber-400" placeholder="CTA link" />
-              <div><input type="number" min="1" max={20} value={maxRecipients} onChange={(e) => setMaxRecipients(Math.min(20, Number(e.target.value) || 1))} className="w-full p-3 bg-slate-50 border border-slate-100 rounded-xl text-sm outline-none focus:border-amber-400" placeholder="Max recipients (max 20)" /><p className="text-[10px] text-amber-600 mt-1 font-semibold">⚠️ Fonnte free tier: max 20 pesan per demo session</p></div>
+            <div className="space-y-5">
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-wider text-amber-500 mb-1">Copywriting Studio</p>
+                <h3 className="text-xl font-bold text-[#1C1D36]">Craft & Approve Message</h3>
+                <p className="text-xs text-slate-500 mt-1">Seluruh proses AI copywriting kini ada di tab Blasting Message agar flow demo lebih fokus.</p>
+              </div>
+
+              <div className="flex flex-wrap gap-2">
+                <button onClick={() => applyQuickRefine("warmer")} className="px-3 py-1.5 rounded-full bg-amber-50 text-amber-700 text-[11px] font-bold border border-amber-100">😊 Lebih hangat</button>
+                <button onClick={() => applyQuickRefine("urgent")} className="px-3 py-1.5 rounded-full bg-red-50 text-red-600 text-[11px] font-bold border border-red-100">🔥 Lebih urgent</button>
+                <button onClick={() => applyQuickRefine("shorter")} className="px-3 py-1.5 rounded-full bg-slate-50 text-slate-600 text-[11px] font-bold border border-slate-100">📏 Ringkas</button>
+                <button onClick={() => applyQuickRefine("optout")} className="px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 text-[11px] font-bold border border-emerald-100">✅ Tambah opt-out</button>
+                <button onClick={() => applyQuickRefine("cta")} className="px-3 py-1.5 rounded-full bg-sky-50 text-sky-700 text-[11px] font-bold border border-sky-100">🔗 Tambah CTA</button>
+              </div>
+
+              <div className="flex flex-wrap gap-2">
+                {["{name}", "{last_purchase_days}", "{cta_link}"].map((token) => (
+                  <button key={token} onClick={() => appendToken(token)} className="px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-[11px] font-mono font-bold text-slate-600 hover:border-amber-300">+ {token}</button>
+                ))}
+              </div>
+
+              <div className="rounded-2xl border border-slate-200 overflow-hidden bg-slate-50">
+                <textarea value={generatedMessage} onChange={(e) => setGeneratedMessage(e.target.value)} className="w-full h-48 p-4 bg-transparent outline-none focus:ring-0 text-sm leading-relaxed resize-none" />
+                <div className="flex flex-wrap gap-2 px-4 py-3 border-t border-slate-200 bg-white/70">
+                  {qualityChecks.map((check) => (
+                    <span key={check.label} className={`text-[10px] font-bold px-2 py-1 rounded-full ${check.ok ? "bg-emerald-50 text-emerald-700" : check.warn ? "bg-red-50 text-red-600" : "bg-amber-50 text-amber-700"}`}>
+                      {check.ok ? "✓" : "⚠"} {check.label}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <input value={ctaLink} onChange={(e) => setCtaLink(e.target.value)} className="w-full p-3 bg-slate-50 border border-slate-100 rounded-xl text-sm outline-none focus:border-amber-400" placeholder="CTA atau link, misal: Balas INFO untuk dibantu admin" />
+              <div className="p-3 rounded-xl bg-amber-50 border border-amber-100"><p className="text-xs font-bold text-amber-700">Demo routing aktif: campaign dari card segment akan dikirim ke 1 nomor perwakilan segmen, bukan ke seluruh audience.</p></div>
               <div className="p-5 bg-white border border-slate-100 rounded-2xl shadow-sm"><h4 className="font-bold mb-3 flex items-center gap-2"><Smartphone className="w-4 h-4 text-emerald-500" /> Send Test</h4><div className="flex gap-2"><input value={testNumber} onChange={(e) => setTestNumber(e.target.value)} className="flex-1 p-3 bg-slate-50 border border-slate-100 rounded-xl text-sm outline-none focus:border-amber-400" placeholder="62812xxxx" /><button onClick={handleSendTest} disabled={loading} className="px-4 py-2 bg-emerald-500 text-white rounded-xl font-bold text-xs disabled:opacity-50">Test</button></div></div>
             </div>
-            <div className="bg-[#E5DDD5] rounded-[32px] p-4 border border-slate-200 shadow-inner relative min-h-[420px]"><div className="bg-white p-3 rounded-tr-xl rounded-b-xl shadow-sm max-w-[85%]"><p className="text-xs leading-relaxed whitespace-pre-wrap">{generatedMessage.replaceAll("{name}", "Aisha").replaceAll("{last_purchase_days}", "45").replaceAll("{cta_link}", ctaLink)}</p><p className="text-[9px] text-slate-400 text-right mt-1">10:42 AM</p></div><button onClick={launchCampaign} disabled={loading} className="absolute bottom-6 left-6 right-6 bg-[#25D366] text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-3 hover:scale-[1.02] transition shadow-xl disabled:opacity-50">{loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />} Approve & Launch to max {maxRecipients}</button></div>
+            <div className="bg-[#E5DDD5] rounded-[32px] p-4 border border-slate-200 shadow-inner relative min-h-[420px]"><div className="bg-white p-3 rounded-tr-xl rounded-b-xl shadow-sm max-w-[85%]"><p className="text-xs leading-relaxed whitespace-pre-wrap">{generatedMessage.replaceAll("{name}", "Aisha").replaceAll("{last_purchase_days}", "45").replaceAll("{cta_link}", ctaLink)}</p><p className="text-[9px] text-slate-400 text-right mt-1">10:42 AM</p></div><button onClick={launchCampaign} disabled={loading} className="absolute bottom-6 left-6 right-6 bg-[#25D366] text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-3 hover:scale-[1.02] transition shadow-xl disabled:opacity-50">{loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />} Approve & Launch Demo Segment</button></div>
           </div>
         )}
 
@@ -350,7 +427,7 @@ export default function WhatsAppCampaign() {
 
             <div className="space-y-3 mb-5">
               <div>
-                <label className="text-[11px] font-bold uppercase text-slate-400">CTA Link</label>
+                <label className="text-[11px] font-bold uppercase text-slate-400">CTA / Link</label>
                 <input value={demoCta} onChange={(e) => setDemoCta(e.target.value)} disabled={demoLoading} className="w-full mt-1 p-3 bg-slate-50 border border-slate-100 rounded-xl text-sm outline-none focus:border-amber-400" />
               </div>
               <div>
