@@ -1,4 +1,4 @@
-import { AlertTriangle } from "lucide-react";
+
 
 const customers = [
   { id: "C-1024", name: "Aisha Rahmawati", risk: 92.3, segment: "At Risk", last: "Sep 3, 2025", value: "$1,240" },

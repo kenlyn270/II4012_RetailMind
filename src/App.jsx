@@ -5,11 +5,13 @@ import ChurnChart from "./components/ChurnChart";
 import HighRiskTable from "./components/HighRiskTable";
 import RFMMap from "./components/RFMMap";
 import SegmentBreakdown from "./components/SegmentBreakdown";
+import WhatsAppCampaign from "./components/WhatsAppCampaign";
 
 export default function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("login");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [currentView, setCurrentView] = useState("intelligence"); // "intelligence" or "campaigns"
 
   const openModal = (tab) => {
     setActiveTab(tab);
@@ -35,15 +37,27 @@ export default function App() {
             </div>
             
             {/* Nav Pills Tengah */}
-            <div className="hidden md:flex items-center gap-6 bg-white/40 px-6 py-2 rounded-full border border-white/20">
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
-                <span className="text-[11px] font-bold text-[#1C1D36] uppercase tracking-wider">AI Models Active</span>
-              </div>
-              <div className="w-px h-4 bg-slate-300"></div>
-              <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-                {new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}
-              </div>
+            <div className="hidden md:flex items-center gap-1 bg-white/40 p-1 rounded-full border border-white/20">
+              <button 
+                onClick={() => setCurrentView("intelligence")}
+                className={`px-6 py-2 rounded-full text-[11px] font-bold uppercase tracking-wider transition ${
+                  currentView === "intelligence" 
+                    ? "bg-[#1C1D36] text-white shadow-md" 
+                    : "text-slate-500 hover:text-[#1C1D36]"
+                }`}
+              >
+                Intelligence
+              </button>
+              <button 
+                onClick={() => setCurrentView("campaigns")}
+                className={`px-6 py-2 rounded-full text-[11px] font-bold uppercase tracking-wider transition ${
+                  currentView === "campaigns" 
+                    ? "bg-[#1C1D36] text-white shadow-md" 
+                    : "text-slate-500 hover:text-[#1C1D36]"
+                }`}
+              >
+                Campaigns
+              </button>
             </div>
 
             {/* Profile & Controls */}
@@ -67,33 +81,40 @@ export default function App() {
           </div>
 
           {/* Main Content Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 relative z-10">
-            
-            {/* KIRI & TENGAH: Stats & Charts (8 Kolom) */}
-            <div className="lg:col-span-8 flex flex-col gap-6">
-              <StatsRow />
+          <div className="relative z-10">
+            {currentView === "intelligence" ? (
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                {/* KIRI & TENGAH: Stats & Charts (8 Kolom) */}
+                <div className="lg:col-span-8 flex flex-col gap-6">
+                  <StatsRow />
 
-              {/* 2 Area Chart Bawah */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 flex-1">
-                
-                {/* Chart 1: Churn Trend */}
-                <ChurnChart />
+                  {/* 2 Area Chart Bawah */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 flex-1">
+                    
+                    {/* Chart 1: Churn Trend */}
+                    <ChurnChart />
 
-                {/* Chart 2: RFM Map */}
-                <RFMMap />
-                <HighRiskTable />
-                <SegmentBreakdown />
+                    {/* Chart 2: RFM Map */}
+                    <RFMMap />
+                    <HighRiskTable />
+                    <SegmentBreakdown />
 
+                  </div>
+                </div>
+
+                {/* KANAN: Panel AI Copywriter (Dark Panel ala Crextio contrast) */}
+                <div className="lg:col-span-4">
+                  <AICopywriter />
+                </div>
               </div>
-            </div>
-
-            {/* KANAN: Panel AI Copywriter (Dark Panel ala Crextio contrast) */}
-            <div className="lg:col-span-4">
-              <AICopywriter />
-            </div>
-          </div>
+            ) : (
+              <div className="animate-in fade-in duration-500">
+                <WhatsAppCampaign />
+              </div>
+            )}
           </div>
         </div>
+      </div>
     );
   }
 
