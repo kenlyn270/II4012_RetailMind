@@ -36,7 +36,7 @@ router.get("/", (req, res) => {
 // POST /webhook/fonnte - Main inbound webhook (incoming messages)
 router.post("/", (req, res) => {
   try {
-    const { sender, message, device } = req.body;
+    const { sender, message } = req.body;
     console.log(`📩 Incoming message from ${sender}: ${message}`);
 
     if (!sender || !message) {
