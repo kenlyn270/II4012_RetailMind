@@ -2,7 +2,10 @@
  * Fonnte Service
  * Wrapper for Fonnte WhatsApp API.
  */
+import { execFile } from "node:child_process";
+import { promisify } from "node:util";
 
+const execFileAsync = promisify(execFile);
 const FONNTE_SEND_URL = process.env.FONNTE_SEND_URL || "https://api.fonnte.com/send";
 const FONNTE_TOKEN = process.env.FONNTE_TOKEN;
 
@@ -14,22 +17,29 @@ export async function sendWhatsAppMessage({ target, message }) {
     throw new Error("FONNTE_TOKEN is not configured");
   }
 
-  const form = new URLSearchParams();
-  form.append("target", target);
-  form.append("message", message);
-  form.append("typing", "true");
-  form.append("delay", "5-20");
-  form.append("countryCode", process.env.FONNTE_COUNTRY_CODE || "0");
-  form.append("preview", "false");
-  form.append("connectOnly", "true");
+  const normalizedMessage = String(message || "").trim();
+  if (!normalizedMessage) {
+    throw new Error("Cannot send empty WhatsApp message");
+  }
 
-  const response = await fetch(FONNTE_SEND_URL, {
-    method: "POST",
-    headers: { Authorization: FONNTE_TOKEN },
-    body: form,
-  });
+  console.log(`[FONNTE] Sending to ${target}: ${normalizedMessage.slice(0, 120)}`);
 
-  const result = await response.json();
+  // Demo-safe transport: use curl multipart exactly like the manual command that
+  // successfully rendered message content in WhatsApp. Use --form-string for
+  // message so curl treats the text literally (not as file upload/metadata syntax).
+  const { stdout } = await execFileAsync("curl", [
+    "-s",
+    "-X", "POST",
+    FONNTE_SEND_URL,
+    "-H", `Authorization: ${FONNTE_TOKEN}`,
+    "-F", `target=${String(target)}`,
+    "--form-string", `message=${normalizedMessage}`,
+    "-F", "typing=true",
+    "-F", "delay=2",
+    "-F", "countryCode=0",
+  ]);
+
+  const result = JSON.parse(stdout);
 
   if (!result.status) {
     throw new Error(result.reason || result.detail || "Fonnte send failed");
@@ -60,7 +70,7 @@ export async function sendWhatsAppBatch(jobs) {
     preview: false,
   }));
 
-  const form = new URLSearchParams();
+  const form = new FormData();
   form.append("data", JSON.stringify(payload));
 
   const response = await fetch(FONNTE_SEND_URL, {
