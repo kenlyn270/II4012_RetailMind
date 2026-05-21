@@ -22,15 +22,41 @@ const router = Router();
 // Demo blast: kirim 1 pesan per segmen ke 4 nomor diskrit (untuk demo webhook).
 // AI copywriter tetap berjalan per segmen.
 const DEMO_SEGMENTS = [
-  { id: "high_value",     label: "High Value",      phone: "6281395261900", goal: "Loyalty maintenance untuk pelanggan top" },
-  { id: "at_risk",        label: "At Risk",         phone: "6281347507393", goal: "Win-back pelanggan yang mulai tidak aktif" },
-  { id: "hibernating",    label: "Hibernating",     phone: "6281359056906", goal: "Reaktivasi pelanggan hibernasi dengan penawaran ringan" },
-  { id: "new_occasional", label: "New / Occasional",phone: "6285117409023", goal: "Onboarding & second-purchase nudge" },
+  { id: "high_value",     label: "High Value",       phone: "6281395261900", goal: "Loyalty maintenance untuk pelanggan top" },
+  { id: "at_risk",        label: "At Risk",          phone: "6281347507393", goal: "Win-back pelanggan yang mulai tidak aktif" },
+  { id: "hibernating",    label: "Hibernating",      phone: "6281359056906", goal: "Reaktivasi pelanggan hibernasi dengan penawaran ringan" },
+  { id: "new_occasional", label: "New / Occasional", phone: "6285117409023", goal: "Onboarding & second-purchase nudge" },
 ];
+
+const DEMO_TARGET_BY_SEGMENT = Object.fromEntries(
+  DEMO_SEGMENTS.map((segment) => [segment.id, segment])
+);
+
+function getDemoTarget(segmentId) {
+  return DEMO_TARGET_BY_SEGMENT[segmentId] || null;
+}
+
+function maskPhone(phone) {
+  return phone.slice(0, 5) + "****" + phone.slice(-3);
+}
+
+function withDemoRouting(segmentFilter = {}) {
+  const demoTarget = getDemoTarget(segmentFilter.segmentId);
+  if (!demoTarget) return segmentFilter;
+
+  return {
+    ...segmentFilter,
+    demoMode: true,
+    demoTargetPhone: demoTarget.phone,
+    demoTargetLabel: demoTarget.label,
+    // MVP/demo safety: regardless of dashboard input, each segment sends to 1 representative number only.
+    maxRecipients: 1,
+  };
+}
 
 // POST /api/campaigns/demo-blast - Kirim 1 pesan AI per segmen ke 4 nomor demo
 router.post("/demo-blast", async (req, res) => {
-  const { ctaLink = "https://retailmind.local/promo", promoDetails = null, dryRun = false } = req.body || {};
+  const { ctaLink = "Balas INFO untuk dibantu admin", promoDetails = null, dryRun = false } = req.body || {};
   const useDryRun = dryRun || !process.env.FONNTE_TOKEN;
   const results = [];
 
@@ -91,7 +117,7 @@ router.get("/demo-blast/targets", (req, res) => {
     targets: DEMO_SEGMENTS.map((s) => ({
       segmentId: s.id,
       segmentLabel: s.label,
-      phoneMasked: s.phone.slice(0, 5) + "****" + s.phone.slice(-3),
+      phoneMasked: maskPhone(s.phone),
       goal: s.goal,
     })),
   });
@@ -106,7 +132,11 @@ router.post("/", (req, res) => {
       return res.status(400).json({ error: "Missing required fields: name, segmentFilter, goal, campaignBrief" });
     }
 
-    const campaign = createCampaign({ name, segmentFilter, goal, campaignBrief, messageTemplate, createdBy });
+    // MVP/demo safety: all dashboard-launched segment campaigns are routed to a single
+    // representative demo number for the selected segment. The mapping lives in this file
+    // so it is easy to audit during demo.
+    const routedSegmentFilter = withDemoRouting(segmentFilter);
+    const campaign = createCampaign({ name, segmentFilter: routedSegmentFilter, goal, campaignBrief, messageTemplate, createdBy });
     res.status(201).json(campaign);
   } catch (error) {
     res.status(500).json({ error: error.message });
