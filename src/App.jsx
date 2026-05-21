@@ -1,6 +1,5 @@
 import { useState } from "react";
 import StatsRow from "./components/StatsRow";
-import AICopywriter from "./components/AICopywriter";
 import ChurnChart from "./components/ChurnChart";
 import HighRiskTable from "./components/HighRiskTable";
 import RFMMap from "./components/RFMMap";
@@ -11,7 +10,7 @@ export default function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("login");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [currentView, setCurrentView] = useState("intelligence"); // "intelligence" or "campaigns"
+  const [currentView, setCurrentView] = useState("intelligence"); // "intelligence" or "blasting"
 
   const openModal = (tab) => {
     setActiveTab(tab);
@@ -49,14 +48,14 @@ export default function App() {
                 Intelligence
               </button>
               <button 
-                onClick={() => setCurrentView("campaigns")}
+                onClick={() => setCurrentView("blasting")}
                 className={`px-6 py-2 rounded-full text-[11px] font-bold uppercase tracking-wider transition ${
-                  currentView === "campaigns" 
+                  currentView === "blasting" 
                     ? "bg-[#1C1D36] text-white shadow-md" 
                     : "text-slate-500 hover:text-[#1C1D36]"
                 }`}
               >
-                Campaigns
+                Blasting Message
               </button>
             </div>
 
@@ -83,28 +82,14 @@ export default function App() {
           {/* Main Content Grid */}
           <div className="relative z-10">
             {currentView === "intelligence" ? (
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                {/* KIRI & TENGAH: Stats & Charts (8 Kolom) */}
-                <div className="lg:col-span-8 flex flex-col gap-6">
-                  <StatsRow />
+              <div className="flex flex-col gap-6">
+                <StatsRow />
 
-                  {/* 2 Area Chart Bawah */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 flex-1">
-                    
-                    {/* Chart 1: Churn Trend */}
-                    <ChurnChart />
-
-                    {/* Chart 2: RFM Map */}
-                    <RFMMap />
-                    <HighRiskTable />
-                    <SegmentBreakdown />
-
-                  </div>
-                </div>
-
-                {/* KANAN: Panel AI Copywriter (Dark Panel ala Crextio contrast) */}
-                <div className="lg:col-span-4">
-                  <AICopywriter />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <ChurnChart />
+                  <RFMMap />
+                  <HighRiskTable />
+                  <SegmentBreakdown />
                 </div>
               </div>
             ) : (
