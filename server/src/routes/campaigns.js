@@ -1,0 +1,290 @@
+/**
+ * Campaigns API Routes
+ */
+import { Router } from "express";
+import {
+  createCampaign,
+  getAllCampaigns,
+  getCampaignById,
+  updateCampaign,
+  approveCampaign,
+  triggerCampaign,
+  pauseCampaign,
+  resumeCampaign,
+  cancelCampaign,
+  getCampaignJobs,
+} from "../services/campaignService.js";
+import { sendWhatsAppMessage, dryRunSend } from "../services/fonnteService.js";
+import { generateCampaignMessage } from "../services/copywriterService.js";
+
+const router = Router();
+
+// Demo blast: kirim 1 pesan per segmen ke 4 nomor diskrit (untuk demo webhook).
+// AI copywriter tetap berjalan per segmen.
+const DEMO_SEGMENTS = [
+  { id: "high_value",     label: "High Value",      phone: "6281395261900", goal: "Loyalty maintenance untuk pelanggan top" },
+  { id: "at_risk",        label: "At Risk",         phone: "6281347507393", goal: "Win-back pelanggan yang mulai tidak aktif" },
+  { id: "hibernating",    label: "Hibernating",     phone: "6281359056906", goal: "Reaktivasi pelanggan hibernasi dengan penawaran ringan" },
+  { id: "new_occasional", label: "New / Occasional",phone: "6285117409023", goal: "Onboarding & second-purchase nudge" },
+];
+
+// POST /api/campaigns/demo-blast - Kirim 1 pesan AI per segmen ke 4 nomor demo
+router.post("/demo-blast", async (req, res) => {
+  const { ctaLink = "https://retailmind.local/promo", promoDetails = null, dryRun = false } = req.body || {};
+  const useDryRun = dryRun || !process.env.FONNTE_TOKEN;
+  const results = [];
+
+  for (const seg of DEMO_SEGMENTS) {
+    try {
+      const copy = await generateCampaignMessage({
+        segmentId: seg.id,
+        segmentLabel: seg.label,
+        goal: seg.goal,
+        ctaLink,
+        promoDetails,
+      });
+
+      // Replace tokens with demo values
+      const personalized = copy.text
+        .replaceAll("{name}", `Pelanggan ${seg.label}`)
+        .replaceAll("{last_purchase_days}", "30")
+        .replaceAll("{cta_link}", ctaLink);
+
+      const sendResult = useDryRun
+        ? dryRunSend({ target: seg.phone, message: personalized })
+        : await sendWhatsAppMessage({ target: seg.phone, message: personalized });
+
+      results.push({
+        segmentId: seg.id,
+        segmentLabel: seg.label,
+        phone: seg.phone,
+        message: personalized,
+        copySource: copy.source,
+        copyModel: copy.model,
+        cached: copy.cached,
+        send: sendResult,
+        ok: true,
+      });
+    } catch (err) {
+      results.push({
+        segmentId: seg.id,
+        segmentLabel: seg.label,
+        phone: seg.phone,
+        ok: false,
+        error: err.message,
+      });
+    }
+  }
+
+  res.json({
+    ok: results.every((r) => r.ok),
+    dryRun: useDryRun,
+    totalSent: results.filter((r) => r.ok).length,
+    totalFailed: results.filter((r) => !r.ok).length,
+    results,
+  });
+});
+
+// GET /api/campaigns/demo-blast/targets - Daftar target demo (untuk preview di UI)
+router.get("/demo-blast/targets", (req, res) => {
+  res.json({
+    targets: DEMO_SEGMENTS.map((s) => ({
+      segmentId: s.id,
+      segmentLabel: s.label,
+      phoneMasked: s.phone.slice(0, 5) + "****" + s.phone.slice(-3),
+      goal: s.goal,
+    })),
+  });
+});
+
+// POST /api/campaigns - Create a new campaign
+router.post("/", (req, res) => {
+  try {
+    const { name, segmentFilter, goal, campaignBrief, messageTemplate, createdBy } = req.body;
+
+    if (!name || !segmentFilter || !goal || !campaignBrief) {
+      return res.status(400).json({ error: "Missing required fields: name, segmentFilter, goal, campaignBrief" });
+    }
+
+    const campaign = createCampaign({ name, segmentFilter, goal, campaignBrief, messageTemplate, createdBy });
+    res.status(201).json(campaign);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// GET /api/campaigns - List all campaigns
+router.get("/", (req, res) => {
+  try {
+    const campaigns = getAllCampaigns();
+    res.json({ campaigns });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// GET /api/campaigns/:id - Get campaign detail
+router.get("/:id", (req, res) => {
+  try {
+    const campaign = getCampaignById(req.params.id);
+    if (!campaign) return res.status(404).json({ error: "Campaign not found" });
+    res.json(campaign);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// PATCH /api/campaigns/:id - Update campaign
+router.patch("/:id", (req, res) => {
+  try {
+    const campaign = updateCampaign(req.params.id, req.body);
+    if (!campaign) return res.status(404).json({ error: "Campaign not found" });
+    res.json(campaign);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// POST /api/campaigns/:id/approve - Approve campaign and generate jobs
+router.post("/:id/approve", (req, res) => {
+  try {
+    const campaign = approveCampaign(req.params.id);
+    res.json(campaign);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+// POST /api/campaigns/:id/trigger - Start sending
+router.post("/:id/trigger", (req, res) => {
+  try {
+    const campaign = triggerCampaign(req.params.id);
+    res.json(campaign);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+// POST /api/campaigns/:id/pause - Pause campaign
+router.post("/:id/pause", (req, res) => {
+  try {
+    const campaign = pauseCampaign(req.params.id);
+    res.json(campaign);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+// POST /api/campaigns/:id/resume - Resume campaign
+router.post("/:id/resume", (req, res) => {
+  try {
+    const campaign = resumeCampaign(req.params.id);
+    res.json(campaign);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+// POST /api/campaigns/:id/cancel - Cancel campaign
+router.post("/:id/cancel", (req, res) => {
+  try {
+    const campaign = cancelCampaign(req.params.id);
+    res.json(campaign);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+// GET /api/campaigns/:id/jobs - Get campaign jobs
+router.get("/:id/jobs", (req, res) => {
+  try {
+    const { limit, offset, status } = req.query;
+    const jobs = getCampaignJobs(req.params.id, {
+      limit: parseInt(limit) || 50,
+      offset: parseInt(offset) || 0,
+      status: status || undefined,
+    });
+    res.json({ jobs });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// POST /api/campaigns/:id/generate - Generate AI copywriting for campaign
+router.post("/:id/generate", async (req, res) => {
+  try {
+    const campaign = getCampaignById(req.params.id);
+    if (!campaign) return res.status(404).json({ error: "Campaign not found" });
+
+    const { ctaLink, promoDetails } = req.body;
+    const segmentFilter = campaign.segment_filter;
+    const segmentId = segmentFilter.segmentId;
+
+    const result = await generateCampaignMessage({
+      segmentId,
+      segmentLabel: campaign.name,
+      goal: campaign.goal,
+      ctaLink: ctaLink || "https://retailmind.local/promo",
+      promoDetails: promoDetails || null,
+    });
+
+    // Save generated message as template
+    updateCampaign(req.params.id, { message_template: result.text });
+
+    res.json({
+      message: result.text,
+      source: result.source,
+      model: result.model,
+      cached: result.cached,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// POST /api/campaigns/preview/generate-preview - Generate without saving (for preview)
+router.post("/preview/generate-preview", async (req, res) => {
+  try {
+    const { segmentId, segmentLabel, goal, ctaLink, promoDetails } = req.body;
+
+    const result = await generateCampaignMessage({
+      segmentId: segmentId || "at_risk",
+      segmentLabel: segmentLabel || "At Risk",
+      goal: goal || "Win-back and reactivation",
+      ctaLink: ctaLink || "https://retailmind.local/promo",
+      promoDetails: promoDetails || null,
+    });
+
+    res.json({
+      message: result.text,
+      source: result.source,
+      model: result.model,
+      cached: result.cached,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// POST /api/campaigns/:id/test-send - Send test message to a number
+router.post("/:id/test-send", async (req, res) => {
+  try {
+    const { phone, message } = req.body;
+    if (!phone || !message) {
+      return res.status(400).json({ error: "Missing required fields: phone, message" });
+    }
+
+    let result;
+    if (!process.env.FONNTE_TOKEN) {
+      result = dryRunSend({ target: phone, message });
+    } else {
+      result = await sendWhatsAppMessage({ target: phone, message });
+    }
+
+    res.json({ success: true, result });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+export default router;
