@@ -1,0 +1,55 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: retailmind-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: retailmind
+      POSTGRES_PASSWORD: retailmind
+      POSTGRES_DB: retailmind
+    volumes:
+      - retailmind_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U retailmind -d retailmind"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  inference:
+    build:
+      context: .
+      dockerfile: backend/inference/Dockerfile
+    container_name: retailmind-inference
+    ports:
+      - "8001:8000"
+    environment:
+      MODEL_PATH: /app/backend/model/retail_ai_model_assets.joblib
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=2).read()\""]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+
+  ngrok:
+    image: ngrok/ngrok:latest
+    container_name: retailmind-ngrok
+    profiles:
+      - webhook
+    depends_on:
+      - postgres
+    command:
+      - http
+      - "http://host.docker.internal:${PORT:-3001}"
+      - --log=stdout
+    environment:
+      NGROK_AUTHTOKEN: ${NGROK_AUTHTOKEN}
+    ports:
+      # Ngrok local inspection UI: http://localhost:4040
+      - "4040:4040"
+    extra_hosts:
+      # Linux support for reaching the Node server running on the host machine.
+      - "host.docker.internal:host-gateway"
+
+volumes:
+  retailmind_pg_data:
