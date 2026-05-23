@@ -16,14 +16,18 @@ import crypto from "crypto";
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
 // Round-robin model list. Order = preference. Free-tier friendly first.
-const MODEL_POOL = (process.env.COPYWRITER_MODELS || "gemini-2.0-flash-lite,gemini-2.0-flash,gemini-1.5-flash-8b,gemini-1.5-flash")
+const MODEL_POOL = (
+  process.env.COPYWRITER_MODELS ||
+  "gemini-2.0-flash-lite,gemini-2.0-flash,gemini-1.5-flash-8b,gemini-1.5-flash"
+)
   .split(",")
   .map((s) => s.trim())
   .filter(Boolean);
 
 const TEMPERATURE = parseFloat(process.env.COPYWRITER_TEMPERATURE) || 0.75;
 const MAX_OUTPUT_TOKENS = parseInt(process.env.COPYWRITER_MAX_TOKENS) || 220;
-const CACHE_TTL_MS = parseInt(process.env.COPYWRITER_CACHE_TTL_MS) || 1000 * 60 * 30; // 30 min
+const CACHE_TTL_MS =
+  parseInt(process.env.COPYWRITER_CACHE_TTL_MS) || 1000 * 60 * 30; // 30 min
 
 // Round-robin pointer + simple cache
 let modelCursor = 0;
@@ -68,26 +72,66 @@ function setCached(key, text) {
 }
 
 /**
+ * Returns a promo string based on individual churn risk score.
+ * All discount values are whole numbers (no decimals).
+ */
+export function getPromoBySegment(segmentId) {
+  const promos = {
+    high_value: "Gratis ongkir + poin loyalty 2x untuk pembelian berikutnya",
+    at_risk: "Diskon 20% semua produk, min. pembelian Rp50000",
+    hibernating: "Diskon 30% semua produk, berlaku 48 jam",
+    new_occasional: "Voucher Rp15000 untuk pembelian kedua",
+  };
+  return promos[segmentId] || null;
+}
+
+/**
  * Compact prompt — minimal tokens while keeping all hard rules.
  * Indonesian instructions kept short to save input tokens.
  */
-function buildPrompt({ segmentLabel, avgChurnRisk, avgRecency, recommendedAction, goal, promoDetails }) {
-  // Use compact format. Drop CLTV detail (not needed in copy).
+function buildPrompt({
+  segmentLabel,
+  avgChurnRisk,
+  avgRecency,
+  recommendedAction,
+  goal,
+  promoDetails,
+}) {
   const ctx = [
-    `Segmen: ${segmentLabel}`,
-    `ChurnRisk: ${avgChurnRisk.toFixed(0)}%`,
-    `Recency: ${avgRecency.toFixed(0)}h`,
-    `Action: ${recommendedAction}`,
-    `Goal: ${goal}`,
-    promoDetails ? `Promo: ${promoDetails}` : "Promo: none",
+    `- Segmen: ${segmentLabel}`,
+    `- Risiko Churn: ${avgChurnRisk.toFixed(0)}%`,
+    `- Terakhir Belanja: ${avgRecency.toFixed(0)} hari yang lalu (sejak hari ini)`,
+    `- Strategi: ${recommendedAction}`,
+    `- Tujuan: ${goal}`,
+    promoDetails ? `- Promo: ${promoDetails}` : "- Promo: Tidak ada",
   ].join("\n");
 
-  return `Tulis 1 pesan WhatsApp marketing Bahasa Indonesia, hangat, max 400 char, max 2 emoji.
-Wajib pakai token: {name}, {last_purchase_days}, {cta_link}.
-Wajib akhiri: "Balas STOP jika tidak ingin menerima info promo."
-Tanpa markdown, tanpa penjelasan, langsung pesannya.
+  return `Kamu adalah AI Copywriter spesialis CRM e-commerce untuk RetailMind.
+Tugasmu: Tulis 1 pesan promosi WhatsApp dalam Bahasa Indonesia yang berfokus pada konversi (gaya Tokopedia/Shopee).
 
-${ctx}`;
+=== KONTEKS PELANGGAN ===
+${ctx}
+
+=== GAYA PENULISAN (WAJIB DIIKUTI) ===
+- Tone: Asik, to the point, bikin FOMO, dan modern.
+- Sapaan: Gunakan "Haloo {name}" atau "Haii {name}".
+- Saat menyebut {last_purchase_days}, WAJIB tulis lengkap seperti ini: "sudah {last_purchase_days} hari sejak terakhir belanja".
+- Kata Kerja: Gunakan "belanja", "upgrade", "berburu diskon", "check out", "amankan stok".
+- Posisi Emoji: EMOJI HANYA BOLEH DILETAKKAN DI AKHIR KALIMAT. Maksimal 1-2 emoji per pesan.
+- Panjang: Maksimal 400 karakter.
+
+=== LARANGAN KERAS (JANGAN LAKUKAN INI) ===
+- DILARANG KERAS menggunakan huruf kapital/CAPSLOCK secara berlebihan.
+- DILARANG KERAS meletakkan emoji di AWAL kalimat atau mengapit teks dengan emoji.
+- JANGAN PERNAH gunakan kata "kangen", "hati", "rindu", "nggak lihat Kakak", atau kalimat drama.
+- JANGAN gunakan gaya bahasa kaku seperti "tapi ingat", "kesempatan emas", atau "jangan tunda lagi".
+- JANGAN gunakan kata "jajan" (kecuali untuk kategori makanan).
+- JANGAN minta pelanggan untuk "Balas INFO", "hubungi admin", atau instruksi reply selain STOP.
+
+=== INSTRUKSI OUTPUT ===
+- WAJIB gunakan token ini persis seperti ini: {name}, {last_purchase_days}, {cta_link}.
+- WAJIB diakhiri dengan kalimat eksak: "Balas STOP jika tidak ingin menerima info promo."
+- JANGAN tambahkan Markdown seperti **bold** atau _italic_ kecuali pada token {name} yang sudah diformat. Jangan ada kurung siku atau teks penjelasan.`;
 }
 
 /**
@@ -104,18 +148,26 @@ function getSegmentStats(segmentId) {
   const query = SEGMENT_QUERIES[segmentId];
   if (!query) return null;
 
-  const stats = db.prepare(`
-    SELECT 
+  const stats = db
+    .prepare(
+      `
+    SELECT
       COUNT(*) as count,
       AVG(churn_risk_score) as avg_churn,
       AVG(recency) as avg_recency,
       AVG(cltv_6_months) as avg_cltv
     FROM (${query})
-  `).get();
+  `,
+    )
+    .get();
 
-  const action = db.prepare(`
+  const action = db
+    .prepare(
+      `
     SELECT recommended_action FROM (${query}) GROUP BY recommended_action ORDER BY COUNT(*) DESC LIMIT 1
-  `).get();
+  `,
+    )
+    .get();
 
   return {
     count: stats.count,
@@ -163,7 +215,7 @@ async function callModel(modelName, prompt) {
 
   const result = await model.generateContent(prompt);
   let text = result.response.text().trim();
-  text = text.replace(/\*\*/g, "").replace(/\*/g, "").replace(/^["']|["']$/g, "");
+  text = text.replace(/\*\*/g, "").replace(/^["']|["']$/g, "");
 
   // Hard length safety — keep it under 500 chars
   if (text.length > 500) {
@@ -176,10 +228,21 @@ async function callModel(modelName, prompt) {
 /**
  * Generate campaign message with round-robin + fallback on rate limit.
  */
-export async function generateCampaignMessage({ segmentId, segmentLabel, goal, ctaLink, promoDetails }) {
+export async function generateCampaignMessage({
+  segmentId,
+  segmentLabel,
+  goal,
+  ctaLink,
+  promoDetails,
+}) {
   // No API key → fallback template.
   if (!GEMINI_API_KEY) {
-    return { text: generateFallbackMessage({ segmentId }), source: "fallback", model: null, cached: false };
+    return {
+      text: generateFallbackMessage({ segmentId }),
+      source: "fallback",
+      model: null,
+      cached: false,
+    };
   }
 
   // Cache lookup.
@@ -226,7 +289,9 @@ export async function generateCampaignMessage({ segmentId, segmentLabel, goal, c
   }
 
   // All models exhausted → fallback template.
-  console.warn(`🔁 All models exhausted, using fallback. Last error: ${lastError?.message}`);
+  console.warn(
+    `🔁 All models exhausted, using fallback. Last error: ${lastError?.message}`,
+  );
   return {
     text: generateFallbackMessage({ segmentId }),
     source: "fallback",

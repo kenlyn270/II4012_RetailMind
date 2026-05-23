@@ -5,17 +5,33 @@
 import db from "../db/database.js";
 import { v4 as uuidv4 } from "uuid";
 import { getEligibleCustomers } from "./segmentService.js";
+import { getPromoBySegment } from "./copywriterService.js";
 
 /**
  * Create a new campaign
  */
-export function createCampaign({ name, segmentFilter, goal, campaignBrief, messageTemplate, createdBy }) {
+export function createCampaign({
+  name,
+  segmentFilter,
+  goal,
+  campaignBrief,
+  messageTemplate,
+  createdBy,
+}) {
   const id = uuidv4();
   const stmt = db.prepare(`
     INSERT INTO campaigns (id, name, segment_filter, goal, campaign_brief, message_template, status, created_by)
     VALUES (?, ?, ?, ?, ?, ?, 'draft', ?)
   `);
-  stmt.run(id, name, JSON.stringify(segmentFilter), goal, campaignBrief, messageTemplate || null, createdBy || "admin");
+  stmt.run(
+    id,
+    name,
+    JSON.stringify(segmentFilter),
+    goal,
+    campaignBrief,
+    messageTemplate || null,
+    createdBy || "admin",
+  );
   return getCampaignById(id);
 }
 
@@ -23,13 +39,19 @@ export function createCampaign({ name, segmentFilter, goal, campaignBrief, messa
  * Get all campaigns
  */
 export function getAllCampaigns() {
-  const campaigns = db.prepare(`
+  const campaigns = db
+    .prepare(
+      `
     SELECT * FROM campaigns ORDER BY created_at DESC
-  `).all();
+  `,
+    )
+    .all();
 
   return campaigns.map((c) => {
-    const jobStats = db.prepare(`
-      SELECT 
+    const jobStats = db
+      .prepare(
+        `
+      SELECT
         COUNT(*) as total,
         SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) as pending,
         SUM(CASE WHEN status = 'sent' THEN 1 ELSE 0 END) as sent,
@@ -37,7 +59,9 @@ export function getAllCampaigns() {
         SUM(CASE WHEN status = 'failed' THEN 1 ELSE 0 END) as failed,
         SUM(CASE WHEN status = 'read' THEN 1 ELSE 0 END) as "read"
       FROM campaign_jobs WHERE campaign_id = ?
-    `).get(c.id);
+    `,
+      )
+      .get(c.id);
 
     return {
       ...c,
@@ -54,8 +78,10 @@ export function getCampaignById(id) {
   const campaign = db.prepare("SELECT * FROM campaigns WHERE id = ?").get(id);
   if (!campaign) return null;
 
-  const jobStats = db.prepare(`
-    SELECT 
+  const jobStats = db
+    .prepare(
+      `
+    SELECT
       COUNT(*) as total,
       SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) as pending,
       SUM(CASE WHEN status = 'generating' THEN 1 ELSE 0 END) as generating,
@@ -65,7 +91,9 @@ export function getCampaignById(id) {
       SUM(CASE WHEN status = 'read' THEN 1 ELSE 0 END) as "read",
       SUM(CASE WHEN status = 'failed' THEN 1 ELSE 0 END) as failed
     FROM campaign_jobs WHERE campaign_id = ?
-  `).get(id);
+  `,
+    )
+    .get(id);
 
   return {
     ...campaign,
@@ -78,7 +106,14 @@ export function getCampaignById(id) {
  * Update campaign fields
  */
 export function updateCampaign(id, updates) {
-  const allowed = ["name", "goal", "campaign_brief", "message_template", "status", "scheduled_at"];
+  const allowed = [
+    "name",
+    "goal",
+    "campaign_brief",
+    "message_template",
+    "status",
+    "scheduled_at",
+  ];
   const sets = [];
   const values = [];
 
@@ -94,7 +129,9 @@ export function updateCampaign(id, updates) {
   sets.push("updated_at = datetime('now')");
   values.push(id);
 
-  db.prepare(`UPDATE campaigns SET ${sets.join(", ")} WHERE id = ?`).run(...values);
+  db.prepare(`UPDATE campaigns SET ${sets.join(", ")} WHERE id = ?`).run(
+    ...values,
+  );
   return getCampaignById(id);
 }
 
@@ -104,14 +141,16 @@ export function updateCampaign(id, updates) {
 export function approveCampaign(id) {
   const campaign = db.prepare("SELECT * FROM campaigns WHERE id = ?").get(id);
   if (!campaign) throw new Error("Campaign not found");
-  if (campaign.status !== "draft") throw new Error("Campaign must be in draft status to approve");
+  if (campaign.status !== "draft")
+    throw new Error("Campaign must be in draft status to approve");
 
   const segmentFilter = JSON.parse(campaign.segment_filter);
   const segmentId = segmentFilter.segmentId;
 
   // Get eligible customers
   const customers = getEligibleCustomers(segmentId);
-  if (customers.length === 0) throw new Error("No eligible customers found for this segment");
+  if (customers.length === 0)
+    throw new Error("No eligible customers found for this segment");
 
   // Apply max recipients limit if set
   const maxRecipients = segmentFilter.maxRecipients || customers.length;
@@ -137,18 +176,31 @@ export function approveCampaign(id) {
         monetary: customer.monetary,
       });
 
-      const isDemoMode = segmentFilter.demoMode === true && segmentFilter.demoTargetPhone;
-      const targetPhone = isDemoMode ? segmentFilter.demoTargetPhone : customer.phone;
-      const displayName = isDemoMode ? `Demo ${segmentFilter.demoTargetLabel || customer.kmeans_segment || "Segment"}` : customer.display_name;
+      const isDemoMode =
+        segmentFilter.demoMode === true && segmentFilter.demoTargetPhone;
+      const targetPhone = isDemoMode
+        ? segmentFilter.demoTargetPhone
+        : customer.phone;
+      const displayName = isDemoMode
+        ? `Demo ${segmentFilter.demoTargetLabel || customer.kmeans_segment || "Segment"}`
+        : customer.display_name;
+      const promoText = getPromoBySegment(segmentId);
 
       // Apply message template with token replacement
       let message = null;
       if (campaign.message_template) {
         message = campaign.message_template
-          .replace(/\{name\}/g, displayName || customer.display_name || "Pelanggan")
+          .replace(
+            /\{name\}/g,
+            `*${displayName || customer.display_name || "Pelanggan"}*`,
+          )
           .replace(/\{last_purchase_days\}/g, customer.recency || "?")
-          .replace(/\{segment\}/g, customer.kmeans_segment || customer.segment || "")
-          .replace(/\{cta_link\}/g, segmentFilter.ctaLink || "Balas INFO untuk dibantu admin");
+          .replace(
+            /\{segment\}/g,
+            customer.kmeans_segment || customer.segment || "",
+          )
+          .replace(/\{promo\}/g, promoText)
+          .replace(/\{cta_link\}/g, segmentFilter.ctaLink || "#");
       }
 
       insertJob.run(
@@ -158,7 +210,7 @@ export function approveCampaign(id) {
         targetPhone,
         displayName,
         snapshot,
-        message
+        message,
       );
     }
   });
@@ -166,10 +218,12 @@ export function approveCampaign(id) {
   createJobs(targetCustomers);
 
   // Update campaign status
-  db.prepare(`
+  db.prepare(
+    `
     UPDATE campaigns SET status = 'scheduled', approved_at = datetime('now'), updated_at = datetime('now')
     WHERE id = ?
-  `).run(id);
+  `,
+  ).run(id);
 
   return getCampaignById(id);
 }
@@ -184,10 +238,12 @@ export function triggerCampaign(id) {
     throw new Error("Campaign must be scheduled or paused to trigger");
   }
 
-  db.prepare(`
+  db.prepare(
+    `
     UPDATE campaigns SET status = 'running', started_at = COALESCE(started_at, datetime('now')), updated_at = datetime('now')
     WHERE id = ?
-  `).run(id);
+  `,
+  ).run(id);
 
   return getCampaignById(id);
 }
@@ -196,10 +252,12 @@ export function triggerCampaign(id) {
  * Pause campaign
  */
 export function pauseCampaign(id) {
-  db.prepare(`
+  db.prepare(
+    `
     UPDATE campaigns SET status = 'paused', updated_at = datetime('now')
     WHERE id = ? AND status = 'running'
-  `).run(id);
+  `,
+  ).run(id);
   return getCampaignById(id);
 }
 
@@ -207,10 +265,12 @@ export function pauseCampaign(id) {
  * Resume campaign
  */
 export function resumeCampaign(id) {
-  db.prepare(`
+  db.prepare(
+    `
     UPDATE campaigns SET status = 'running', updated_at = datetime('now')
     WHERE id = ? AND status = 'paused'
-  `).run(id);
+  `,
+  ).run(id);
   return getCampaignById(id);
 }
 
@@ -221,15 +281,19 @@ export function cancelCampaign(id) {
   const campaign = db.prepare("SELECT * FROM campaigns WHERE id = ?").get(id);
   if (!campaign) throw new Error("Campaign not found");
 
-  db.prepare(`
+  db.prepare(
+    `
     UPDATE campaigns SET status = 'cancelled', updated_at = datetime('now') WHERE id = ?
-  `).run(id);
+  `,
+  ).run(id);
 
   // Mark pending jobs as cancelled (using failed status)
-  db.prepare(`
+  db.prepare(
+    `
     UPDATE campaign_jobs SET status = 'failed', error_message = 'Campaign cancelled'
     WHERE campaign_id = ? AND status IN ('pending', 'generating', 'queued')
-  `).run(id);
+  `,
+  ).run(id);
 
   return getCampaignById(id);
 }
@@ -237,7 +301,10 @@ export function cancelCampaign(id) {
 /**
  * Get jobs for a campaign
  */
-export function getCampaignJobs(campaignId, { limit = 50, offset = 0, status } = {}) {
+export function getCampaignJobs(
+  campaignId,
+  { limit = 50, offset = 0, status } = {},
+) {
   let query = "SELECT * FROM campaign_jobs WHERE campaign_id = ?";
   const params = [campaignId];
 
@@ -257,9 +324,11 @@ export function getCampaignJobs(campaignId, { limit = 50, offset = 0, status } =
  */
 export function createTestJob(campaignId, phone, message) {
   const id = uuidv4();
-  db.prepare(`
+  db.prepare(
+    `
     INSERT INTO campaign_jobs (id, campaign_id, customer_id, phone, display_name, segment_snapshot, generated_message, status)
     VALUES (?, ?, 'TEST', ?, 'Test User', '{}', ?, 'pending')
-  `).run(id, campaignId, phone, message);
+  `,
+  ).run(id, campaignId, phone, message);
   return id;
 }
