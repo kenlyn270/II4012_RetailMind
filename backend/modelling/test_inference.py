@@ -21,13 +21,13 @@ def test_inference(rfm_dummy_path='backend/data/dummy_rfm_customers.csv',
     assets = joblib.load(model_path)
     
     # Extract assets
-    log_scaler = assets['scaler']
+    log_scaler = assets['log_scaler'] if 'log_scaler' in assets else assets['scaler']
     iso_forest = assets['churn_model']
-    kmeans = assets['segmentation_model']
+    kmeans     = assets['segmentation_model']
     bgf_params = assets['cltv_bgf_params']
     ggf_params = assets['cltv_ggf_params']
-    min_score = assets['risk_score_params']['min_score']
-    max_score = assets['risk_score_params']['max_score']
+    min_score  = assets['risk_score_params']['min_score']
+    max_score  = assets['risk_score_params']['max_score']
     
     print(" -> Models loaded successfully!")
     print(f" -> Metadata: {assets['metadata']}")
@@ -40,13 +40,18 @@ def test_inference(rfm_dummy_path='backend/data/dummy_rfm_customers.csv',
     ggf = GammaGammaFitter()
     ggf.params_ = ggf_params
     
-    # 3. Instantiate Custom Raw StandardScaler
-    # To fix the bug where the saved scaler is log-scaled, but Isolation Forest expects raw scale:
-    raw_scaler = StandardScaler()
-    raw_scaler.mean_ = np.array([201.331915617557, 6.289384144266758, 3018.6167366451173])
-    raw_scaler.scale_ = np.array([209.32089900492423, 13.008299216842431, 14736.47735182636])
-    raw_scaler.var_ = np.array([43815.238760229695, 169.2158485149034, 217163764.74089122])
-    raw_scaler.n_features_in_ = 3
+    # 3. Resolve Raw Scaler for Isolation Forest
+    if 'raw_scaler' in assets:
+        print(" -> Using v2 raw_scaler from joblib.")
+        raw_scaler = assets['raw_scaler']
+    else:
+        # Fallback hack for joblib v1 (deprecated)
+        print(" -> WARNING: raw_scaler not found. Using v1 hardcoded fallback.")
+        raw_scaler = StandardScaler()
+        raw_scaler.mean_ = np.array([201.331915617557, 6.289384144266758, 3018.6167366451173])
+        raw_scaler.scale_ = np.array([209.32089900492423, 13.008299216842431, 14736.47735182636])
+        raw_scaler.var_ = raw_scaler.scale_ ** 2
+        raw_scaler.n_features_in_ = 3
     
     # 4. Load Dummy Data
     if not os.path.exists(rfm_dummy_path):
