@@ -363,14 +363,14 @@ export default function WhatsAppCampaign() {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-3xl font-bold text-[#1C1D36]">
-            WhatsApp Campaign
-          </h2>
-          <p className="text-slate-500 font-medium">
-            Real audience preview, approval, test-send, and Fonnte dispatch.
-          </p>
-        </div>
+      <div>
+        <h1 className="text-4xl md:text-[2.5rem] font-sans font-bold text-[#1C1D36] tracking-tight mb-2">
+          WhatsApp Campaign
+        </h1>
+        <p className="text-slate-500 font-medium">
+          Real audience preview, approval, test-send, and Fonnte dispatch.
+        </p>
+      </div>
         <div className="flex items-center gap-2">
           <button
             onClick={() => setDemoOpen(true)}

@@ -17,3 +17,7 @@ body {
   .animate-float-2 { animation: float 5s ease-in-out infinite 1s; }
   .animate-float-3 { animation: float 6s ease-in-out infinite 0.5s; }
 }
+
+html {
+  overflow-y: scroll;
+}
