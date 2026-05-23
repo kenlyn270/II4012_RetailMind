@@ -7,9 +7,9 @@ import { getAllSegments, getSegmentPreview } from "../services/segmentService.js
 const router = Router();
 
 // GET /api/segments - List all available segments with counts
-router.get("/", (req, res) => {
+router.get("/", async (req, res) => {
   try {
-    const segments = getAllSegments();
+    const segments = await getAllSegments();
     res.json({ segments });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -17,11 +17,11 @@ router.get("/", (req, res) => {
 });
 
 // GET /api/segments/:segmentId/preview - Preview segment audience with eligibility
-router.get("/:segmentId/preview", (req, res) => {
+router.get("/:segmentId/preview", async (req, res) => {
   try {
     const { segmentId } = req.params;
     const limit = parseInt(req.query.limit) || 10;
-    const preview = getSegmentPreview(segmentId, limit);
+    const preview = await getSegmentPreview(segmentId, limit);
 
     if (!preview) {
       return res.status(404).json({ error: "Segment not found" });

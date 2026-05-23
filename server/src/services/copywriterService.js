@@ -10,7 +10,7 @@
  * 5. Output token cap
  */
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import db from "../db/database.js";
+import { queryOne } from "../db/database.js";
 import crypto from "crypto";
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
@@ -137,7 +137,7 @@ ${ctx}
 /**
  * Get segment statistics for prompt context (1 query).
  */
-function getSegmentStats(segmentId) {
+async function getSegmentStats(segmentId) {
   const SEGMENT_QUERIES = {
     high_value: `SELECT * FROM customer_segments WHERE kmeans_segment = 'High Value'`,
     at_risk: `SELECT * FROM customer_segments WHERE kmeans_segment = 'At Risk'`,
@@ -148,32 +148,24 @@ function getSegmentStats(segmentId) {
   const query = SEGMENT_QUERIES[segmentId];
   if (!query) return null;
 
-  const stats = db
-    .prepare(
-      `
+  const stats = await queryOne(`
     SELECT
-      COUNT(*) as count,
+      COUNT(*)::int as count,
       AVG(churn_risk_score) as avg_churn,
       AVG(recency) as avg_recency,
       AVG(cltv_6_months) as avg_cltv
-    FROM (${query})
-  `,
-    )
-    .get();
+    FROM (${query}) seg
+  `);
 
-  const action = db
-    .prepare(
-      `
-    SELECT recommended_action FROM (${query}) GROUP BY recommended_action ORDER BY COUNT(*) DESC LIMIT 1
-  `,
-    )
-    .get();
+  const action = await queryOne(`
+    SELECT recommended_action FROM (${query}) seg GROUP BY recommended_action ORDER BY COUNT(*) DESC LIMIT 1
+  `);
 
   return {
     count: stats.count,
-    avgChurnRisk: stats.avg_churn || 0,
-    avgRecency: stats.avg_recency || 0,
-    avgCltv: stats.avg_cltv || 0,
+    avgChurnRisk: Number(stats.avg_churn || 0),
+    avgRecency: Number(stats.avg_recency || 0),
+    avgCltv: Number(stats.avg_cltv || 0),
     recommendedAction: action?.recommended_action || "Standard Nurture",
   };
 }
@@ -252,7 +244,7 @@ export async function generateCampaignMessage({
     return { text: cached, source: "cache", model: null, cached: true };
   }
 
-  const stats = getSegmentStats(segmentId);
+  const stats = await getSegmentStats(segmentId);
   if (!stats) throw new Error(`Unknown segment: ${segmentId}`);
 
   const prompt = buildPrompt({

@@ -124,7 +124,7 @@ router.get("/demo-blast/targets", (req, res) => {
 });
 
 // POST /api/campaigns - Create a new campaign
-router.post("/", (req, res) => {
+router.post("/", async (req, res) => {
   try {
     const { name, segmentFilter, goal, campaignBrief, messageTemplate, createdBy } = req.body;
 
@@ -136,7 +136,7 @@ router.post("/", (req, res) => {
     // representative demo number for the selected segment. The mapping lives in this file
     // so it is easy to audit during demo.
     const routedSegmentFilter = withDemoRouting(segmentFilter);
-    const campaign = createCampaign({ name, segmentFilter: routedSegmentFilter, goal, campaignBrief, messageTemplate, createdBy });
+    const campaign = await createCampaign({ name, segmentFilter: routedSegmentFilter, goal, campaignBrief, messageTemplate, createdBy });
     res.status(201).json(campaign);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -144,9 +144,9 @@ router.post("/", (req, res) => {
 });
 
 // GET /api/campaigns - List all campaigns
-router.get("/", (req, res) => {
+router.get("/", async (req, res) => {
   try {
-    const campaigns = getAllCampaigns();
+    const campaigns = await getAllCampaigns();
     res.json({ campaigns });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -154,9 +154,9 @@ router.get("/", (req, res) => {
 });
 
 // GET /api/campaigns/:id - Get campaign detail
-router.get("/:id", (req, res) => {
+router.get("/:id", async (req, res) => {
   try {
-    const campaign = getCampaignById(req.params.id);
+    const campaign = await getCampaignById(req.params.id);
     if (!campaign) return res.status(404).json({ error: "Campaign not found" });
     res.json(campaign);
   } catch (error) {
@@ -165,9 +165,9 @@ router.get("/:id", (req, res) => {
 });
 
 // PATCH /api/campaigns/:id - Update campaign
-router.patch("/:id", (req, res) => {
+router.patch("/:id", async (req, res) => {
   try {
-    const campaign = updateCampaign(req.params.id, req.body);
+    const campaign = await updateCampaign(req.params.id, req.body);
     if (!campaign) return res.status(404).json({ error: "Campaign not found" });
     res.json(campaign);
   } catch (error) {
@@ -176,9 +176,9 @@ router.patch("/:id", (req, res) => {
 });
 
 // POST /api/campaigns/:id/approve - Approve campaign and generate jobs
-router.post("/:id/approve", (req, res) => {
+router.post("/:id/approve", async (req, res) => {
   try {
-    const campaign = approveCampaign(req.params.id);
+    const campaign = await approveCampaign(req.params.id);
     res.json(campaign);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -186,9 +186,9 @@ router.post("/:id/approve", (req, res) => {
 });
 
 // POST /api/campaigns/:id/trigger - Start sending
-router.post("/:id/trigger", (req, res) => {
+router.post("/:id/trigger", async (req, res) => {
   try {
-    const campaign = triggerCampaign(req.params.id);
+    const campaign = await triggerCampaign(req.params.id);
     res.json(campaign);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -196,9 +196,9 @@ router.post("/:id/trigger", (req, res) => {
 });
 
 // POST /api/campaigns/:id/pause - Pause campaign
-router.post("/:id/pause", (req, res) => {
+router.post("/:id/pause", async (req, res) => {
   try {
-    const campaign = pauseCampaign(req.params.id);
+    const campaign = await pauseCampaign(req.params.id);
     res.json(campaign);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -206,9 +206,9 @@ router.post("/:id/pause", (req, res) => {
 });
 
 // POST /api/campaigns/:id/resume - Resume campaign
-router.post("/:id/resume", (req, res) => {
+router.post("/:id/resume", async (req, res) => {
   try {
-    const campaign = resumeCampaign(req.params.id);
+    const campaign = await resumeCampaign(req.params.id);
     res.json(campaign);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -216,9 +216,9 @@ router.post("/:id/resume", (req, res) => {
 });
 
 // POST /api/campaigns/:id/cancel - Cancel campaign
-router.post("/:id/cancel", (req, res) => {
+router.post("/:id/cancel", async (req, res) => {
   try {
-    const campaign = cancelCampaign(req.params.id);
+    const campaign = await cancelCampaign(req.params.id);
     res.json(campaign);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -226,10 +226,10 @@ router.post("/:id/cancel", (req, res) => {
 });
 
 // GET /api/campaigns/:id/jobs - Get campaign jobs
-router.get("/:id/jobs", (req, res) => {
+router.get("/:id/jobs", async (req, res) => {
   try {
     const { limit, offset, status } = req.query;
-    const jobs = getCampaignJobs(req.params.id, {
+    const jobs = await getCampaignJobs(req.params.id, {
       limit: parseInt(limit) || 50,
       offset: parseInt(offset) || 0,
       status: status || undefined,
@@ -243,7 +243,7 @@ router.get("/:id/jobs", (req, res) => {
 // POST /api/campaigns/:id/generate - Generate AI copywriting for campaign
 router.post("/:id/generate", async (req, res) => {
   try {
-    const campaign = getCampaignById(req.params.id);
+    const campaign = await getCampaignById(req.params.id);
     if (!campaign) return res.status(404).json({ error: "Campaign not found" });
 
     const { ctaLink, promoDetails } = req.body;
@@ -259,7 +259,7 @@ router.post("/:id/generate", async (req, res) => {
     });
 
     // Save generated message as template
-    updateCampaign(req.params.id, { message_template: result.text });
+    await updateCampaign(req.params.id, { message_template: result.text });
 
     res.json({
       message: result.text,
