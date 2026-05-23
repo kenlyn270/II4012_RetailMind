@@ -562,6 +562,25 @@ export default function WhatsAppCampaign() {
                     </tbody>
                   </table>
                 </div>
+                <div className="flex flex-col gap-3 mt-4">
+                  <button
+                    onClick={generateAIContent}
+                    disabled={isGenerating}
+                    className="w-full bg-[#1C1D36] text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-3 hover:scale-[1.01] transition shadow-lg disabled:opacity-50"
+                  >
+                    {isGenerating ? (
+                      <>
+                        <Loader2 className="w-5 h-5 animate-spin" /> Generating
+                        with AI...
+                      </>
+                    ) : (
+                      <>
+                        <Wand2 className="w-5 h-5 text-amber-400" /> Generate AI
+                        Copywriting (Gemini)
+                      </>
+                    )}
+                  </button>
+                </div>
               </>
             )}
           </div>
