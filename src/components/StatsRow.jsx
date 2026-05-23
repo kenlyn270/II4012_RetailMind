@@ -16,7 +16,7 @@ const stats = [
     change: "+2.1%",
     trend: "up",
     icon: TrendingDown,
-    variant: "color2",
+    variant: "color1",
   },
   {
     label: "RFM Segments",
@@ -25,7 +25,7 @@ const stats = [
     change: "Top tier",
     trend: "up",
     icon: Layers,
-    variant: "color3",
+    variant: "color1",
   },
   {
     label: "Active Campaigns",
@@ -34,15 +34,15 @@ const stats = [
     change: "+3 this week",
     trend: "up",
     icon: Megaphone,
-    variant: "color4",
+    variant: "color1",
   },
 ];
 
 const variantStyles = {
-  color1: "bg-gradient-to-br from-[#FFD13B] to-[#FFA951] text-[#1C1D36]",
-  color2: "bg-gradient-to-br from-[#FFA951] to-[#FDC591] text-[#1C1D36]",
-  color3: "bg-gradient-to-br from-[#FDC591] to-[#FCEFB4] text-[#1C1D36]",
-  color4: "bg-gradient-to-br from-[#FCEFB4] to-[#FFF394] text-[#1C1D36]",
+  color1: "bg-gradient-to-br from-[#FFD13B] to-[#FFBE46] text-[#1C1D36]",
+  color2: "bg-gradient-to-br from-[#FFBE46] to-[#FFA951] text-[#1C1D36]",
+  color3: "bg-gradient-to-br from-[#FFA951] to-[#FEB771] text-[#1C1D36]",
+  color4: "bg-gradient-to-br from-[#FEB771] to-[#FDC591] text-[#1C1D36]",
 };
 
 export default function StatsRow() {

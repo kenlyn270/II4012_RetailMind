@@ -8,9 +8,12 @@ import WhatsAppCampaign from "./components/WhatsAppCampaign";
 
 export default function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState("login");
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [currentView, setCurrentView] = useState("intelligence"); // "intelligence" or "blasting"
+  const [activeTab, setActiveTab] = useState("login");  
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    return localStorage.getItem("retailmind_logged_in") === "true";
+  });
+  
+  const [currentView, setCurrentView] = useState("intelligence");
 
   const openModal = (tab) => {
     setActiveTab(tab);
@@ -21,13 +24,19 @@ export default function App() {
     e.preventDefault();
     setIsModalOpen(false);
     setIsLoggedIn(true);
+    localStorage.setItem("retailmind_logged_in", "true");
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    localStorage.removeItem("retailmind_logged_in");
   };
 
   if (isLoggedIn) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-[#FCFAF5] to-[#FBE7B2] flex flex-col items-center p-4 md:p-8 font-sans">
         
-        {/* Container Dashboard Utama (Gradient Cream & Rounded Besar ala Crextio) */}
+        {/* Container Dashboard Utama */}
         <div className="w-full max-w-[1500px]">
           {/* Header / Navbar Dalam */}
           <nav className="flex justify-between items-center mb-8 relative z-10">
@@ -61,23 +70,25 @@ export default function App() {
 
             {/* Profile & Controls */}
             <div className="flex items-center gap-4">
-              <button onClick={() => setIsLoggedIn(false)} className="text-slate-500 hover:text-red-500 font-semibold text-sm transition">
+              {/* 4. Panggil handleLogout di sini */}
+              <button onClick={handleLogout} className="text-slate-500 hover:text-red-500 font-semibold text-sm transition">
                 Logout
               </button>
               <div className="flex items-center gap-2">
-                <div className="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-500 hover:bg-slate-50 cursor-pointer shadow-sm">🔔</div>
                 <div className="w-10 h-10 rounded-full bg-[#FFD13B] flex items-center justify-center text-[#1C1D36] font-bold shadow-md cursor-pointer border border-yellow-400">RM</div>
               </div>
             </div>
           </nav>
 
           {/* Title Area */}
-          <div className="mb-8 relative z-10">
-            <h1 className="text-4xl md:text-[2.5rem] font-sans font-medium text-[#1C1D36] tracking-tight mb-2">
-              Welcome back, Admin
-            </h1>
-            <p className="text-slate-500 font-medium">Here's your AI-powered customer intelligence overview for today.</p>
-          </div>
+          {currentView === "intelligence" && (
+            <div className="mb-8 relative z-10">
+              <h1 className="text-4xl md:text-[2.5rem] font-sans font-bold text-[#1C1D36] tracking-tight mb-2">
+                Welcome back, Admin
+              </h1>
+              <p className="text-slate-500 font-medium">Here's your AI-powered customer intelligence overview for today.</p>
+            </div>
+          )}
 
           {/* Main Content Grid */}
           <div className="relative z-10">
