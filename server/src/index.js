@@ -5,6 +5,8 @@ import { initDatabase } from "./db/database.js";
 import segmentsRouter from "./routes/segments.js";
 import campaignsRouter from "./routes/campaigns.js";
 import webhooksRouter from "./routes/webhooks.js";
+import datasetsRouter from "./routes/datasets.js";
+import systemRouter from "./routes/system.js";
 import { startWorker } from "./workers/dispatchWorker.js";
 
 const app = express();
@@ -15,11 +17,13 @@ app.use(cors());
 app.use(express.json());
 
 // Initialize database
-initDatabase();
+await initDatabase();
 
 // Routes
 app.use("/api/segments", segmentsRouter);
 app.use("/api/campaigns", campaignsRouter);
+app.use("/api/datasets", datasetsRouter);
+app.use("/api/system", systemRouter);
 
 // Fonnte webhook routes
 // Public-facing (registered in Fonnte dashboard):
