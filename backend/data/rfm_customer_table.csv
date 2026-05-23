@@ -1,5 +1,5 @@
 Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore,RF_Score,Segment,Country
-12346.0,326,12,77556.46,2,5,5,25,Can't Loose,United Kingdom
+12346.0,326,12,77556.46,2,5,5,25,Can't Lose,United Kingdom
 12347.0,2,8,5633.32,5,4,5,54,Champions,Iceland
 12348.0,75,5,2019.4,3,4,4,34,Loyal Customers,Finland
 12349.0,19,4,4428.69,5,3,5,53,Potential Loyalists,Italy
@@ -134,7 +134,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 12479.0,11,1,527.2,5,1,2,51,New Customers,Germany
 12480.0,28,7,5464.85,4,4,5,44,Loyal Customers,Germany
 12481.0,23,15,12361.39,4,5,5,45,Loyal Customers,Germany
-12482.0,576,29,23691.4,1,5,5,15,Can't Loose,Sweden
+12482.0,576,29,23691.4,1,5,5,15,Can't Lose,Sweden
 12483.0,17,19,5120.58,5,5,5,55,Champions,Sweden
 12484.0,33,12,6370.15,4,5,5,45,Loyal Customers,Spain
 12485.0,529,1,708.1,1,1,3,11,Hibernating,Sweden
@@ -406,7 +406,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 12752.0,81,1,4366.78,3,1,5,31,About To Sleep,Norway
 12753.0,23,6,21429.39,4,4,5,44,Loyal Customers,Japan
 12754.0,236,3,3010.74,2,3,5,23,At Risk,Japan
-12755.0,281,11,9030.66,2,5,5,25,Can't Loose,Japan
+12755.0,281,11,9030.66,2,5,5,25,Can't Lose,Japan
 12756.0,87,1,112.07999999999998,3,1,1,31,About To Sleep,Japan
 12757.0,16,13,7857.1,5,5,5,55,Champions,Portugal
 12758.0,117,7,9903.24,3,4,5,34,Loyal Customers,Portugal
@@ -486,7 +486,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 12832.0,32,2,383.03,4,2,2,42,Potential Loyalists,United Kingdom
 12833.0,145,1,417.38,3,1,2,31,About To Sleep,United Kingdom
 12834.0,283,1,312.38,2,1,2,21,Hibernating,United Kingdom
-12835.0,428,41,6043.31,1,5,5,15,Can't Loose,United Kingdom
+12835.0,428,41,6043.31,1,5,5,15,Can't Lose,United Kingdom
 12836.0,59,15,6585.62,4,5,5,45,Loyal Customers,United Kingdom
 12837.0,173,2,688.41,3,2,3,32,About To Sleep,United Kingdom
 12838.0,34,10,3398.48,4,5,5,45,Loyal Customers,United Kingdom
@@ -523,7 +523,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 12869.0,682,1,337.66999999999996,1,1,2,11,Hibernating,United Kingdom
 12870.0,375,3,1676.95,2,3,4,23,At Risk,United Kingdom
 12871.0,84,3,744.02,3,3,3,33,Need Attention,United Kingdom
-12872.0,327,12,3685.4900000000002,2,5,5,25,Can't Loose,United Kingdom
+12872.0,327,12,3685.4900000000002,2,5,5,25,Can't Lose,United Kingdom
 12873.0,282,3,2027.3,2,3,4,23,At Risk,United Kingdom
 12874.0,385,2,948.42,2,2,3,22,Hibernating,Belgium
 12875.0,143,5,1356.99,3,4,4,34,Loyal Customers,United Kingdom
@@ -636,7 +636,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 12983.0,598,1,490.08000000000004,1,1,2,11,Hibernating,United Kingdom
 12984.0,19,1,97.5,5,1,1,51,New Customers,United Kingdom
 12985.0,1,2,1239.38,5,2,3,52,Potential Loyalists,United Kingdom
-12986.0,429,10,2729.84,1,5,4,15,Can't Loose,United Kingdom
+12986.0,429,10,2729.84,1,5,4,15,Can't Lose,United Kingdom
 12987.0,74,5,1312.21,3,4,4,34,Loyal Customers,United Kingdom
 12988.0,292,1,535.32,2,1,2,21,Hibernating,United Kingdom
 12989.0,3,33,13551.75,5,5,5,55,Champions,United Kingdom
@@ -694,7 +694,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 13041.0,451,4,799.13,1,3,3,13,At Risk,United Kingdom
 13042.0,598,3,1556.54,1,3,4,13,At Risk,United Kingdom
 13043.0,273,1,516.42,2,1,2,21,Hibernating,United Kingdom
-13044.0,291,11,4853.9,2,5,5,25,Can't Loose,United Kingdom
+13044.0,291,11,4853.9,2,5,5,25,Can't Lose,United Kingdom
 13045.0,99,3,808.92,3,3,3,33,Need Attention,United Kingdom
 13046.0,31,3,949.25,4,3,3,43,Potential Loyalists,United Kingdom
 13047.0,32,24,8795.16,4,5,5,45,Loyal Customers,United Kingdom
@@ -708,7 +708,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 13056.0,551,1,209.48,1,1,1,11,Hibernating,United Kingdom
 13057.0,530,3,722.09,1,3,3,13,At Risk,United Kingdom
 13058.0,25,3,271.40000000000003,4,3,1,43,Potential Loyalists,United Kingdom
-13059.0,250,10,2303.17,2,5,4,25,Can't Loose,United Kingdom
+13059.0,250,10,2303.17,2,5,4,25,Can't Lose,United Kingdom
 13060.0,254,1,307.53,2,1,2,21,Hibernating,United Kingdom
 13061.0,72,1,248.61,3,1,1,31,About To Sleep,United Kingdom
 13062.0,191,1,346.98,2,1,2,21,Hibernating,United Kingdom
@@ -742,7 +742,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 13090.0,9,24,14103.09,5,5,5,55,Champions,United Kingdom
 13091.0,28,3,2321.82,4,3,4,43,Potential Loyalists,United Kingdom
 13092.0,71,12,2140.28,3,5,4,35,Loyal Customers,United Kingdom
-13093.0,276,55,54943.65,2,5,5,25,Can't Loose,United Kingdom
+13093.0,276,55,54943.65,2,5,5,25,Can't Lose,United Kingdom
 13094.0,21,13,2433.1200000000003,4,5,4,45,Loyal Customers,United Kingdom
 13095.0,71,1,74.39999999999999,3,1,1,31,About To Sleep,United Kingdom
 13096.0,394,1,419.70000000000005,2,1,2,21,Hibernating,United Kingdom
@@ -854,7 +854,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 13203.0,10,10,2648.25,5,5,4,55,Champions,United Kingdom
 13204.0,731,1,966.6600000000001,1,1,3,11,Hibernating,United Kingdom
 13205.0,443,1,2803.2,1,1,4,11,Hibernating,United Kingdom
-13206.0,400,13,8377.32,2,5,5,25,Can't Loose,United Kingdom
+13206.0,400,13,8377.32,2,5,5,25,Can't Lose,United Kingdom
 13207.0,15,4,535.86,5,3,2,53,Potential Loyalists,United Kingdom
 13208.0,59,9,1988.5,4,5,4,45,Loyal Customers,United Kingdom
 13209.0,30,13,8509.51,4,5,5,45,Loyal Customers,United Kingdom
@@ -1086,7 +1086,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 13443.0,449,6,1280.16,1,4,4,14,At Risk,United Kingdom
 13444.0,374,2,631.6800000000001,2,2,3,22,Hibernating,United Kingdom
 13445.0,626,1,241.89999999999998,1,1,1,11,Hibernating,United Kingdom
-13446.0,430,11,3881.89,1,5,5,15,Can't Loose,United Kingdom
+13446.0,430,11,3881.89,1,5,5,15,Can't Lose,United Kingdom
 13447.0,23,3,1129.14,4,3,3,43,Potential Loyalists,United Kingdom
 13448.0,17,13,9240.87,5,5,5,55,Champions,United Kingdom
 13449.0,24,1,291.88,4,1,2,41,Promising,United Kingdom
@@ -1124,7 +1124,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 13482.0,232,2,336.09,2,2,2,22,Hibernating,United Kingdom
 13483.0,66,1,140.34,3,1,1,31,About To Sleep,United Kingdom
 13484.0,241,3,790.72,2,3,3,23,At Risk,United Kingdom
-13485.0,233,11,3019.2200000000003,2,5,5,25,Can't Loose,United Kingdom
+13485.0,233,11,3019.2200000000003,2,5,5,25,Can't Lose,United Kingdom
 13486.0,78,3,1122.41,3,3,3,33,Need Attention,United Kingdom
 13487.0,58,5,846.87,4,4,3,44,Loyal Customers,United Kingdom
 13488.0,17,23,15587.88,5,5,5,55,Champions,United Kingdom
@@ -1180,7 +1180,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 13539.0,86,7,1569.3600000000001,3,4,4,34,Loyal Customers,United Kingdom
 13540.0,467,3,632.39,1,3,3,13,At Risk,United Kingdom
 13541.0,427,2,785.25,1,2,3,12,Hibernating,United Kingdom
-13542.0,377,17,4006.17,2,5,5,25,Can't Loose,United Kingdom
+13542.0,377,17,4006.17,2,5,5,25,Can't Lose,United Kingdom
 13543.0,634,2,1439.6100000000001,1,2,4,12,Hibernating,United Kingdom
 13544.0,40,6,829.0,4,4,3,44,Loyal Customers,United Kingdom
 13545.0,391,2,374.64,2,2,2,22,Hibernating,United Kingdom
@@ -1199,7 +1199,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 13558.0,6,4,605.06,5,3,2,53,Potential Loyalists,United Kingdom
 13559.0,513,2,990.0,1,2,3,12,Hibernating,United Kingdom
 13560.0,7,1,174.37,5,1,1,51,New Customers,United Kingdom
-13561.0,216,11,1820.72,2,5,4,25,Can't Loose,United Kingdom
+13561.0,216,11,1820.72,2,5,4,25,Can't Lose,United Kingdom
 13562.0,82,8,4838.18,3,4,5,34,Loyal Customers,United Kingdom
 13563.0,84,2,777.53,3,2,3,32,About To Sleep,United Kingdom
 13564.0,144,37,17249.55,3,5,5,35,Loyal Customers,United Kingdom
@@ -1296,7 +1296,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 13656.0,165,4,1078.85,3,3,3,33,Need Attention,United Kingdom
 13657.0,11,2,382.14,5,2,2,52,Potential Loyalists,United Kingdom
 13658.0,10,9,6025.5,5,5,5,55,Champions,United Kingdom
-13659.0,206,12,4894.88,2,5,5,25,Can't Loose,United Kingdom
+13659.0,206,12,4894.88,2,5,5,25,Can't Lose,United Kingdom
 13660.0,400,1,314.59,2,1,2,21,Hibernating,United Kingdom
 13661.0,603,1,325.24,1,1,2,11,Hibernating,United Kingdom
 13662.0,86,11,2250.11,3,5,4,35,Loyal Customers,United Kingdom
@@ -1329,7 +1329,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 13690.0,59,1,172.25,4,1,1,41,Promising,United Kingdom
 13691.0,396,1,212.78,2,1,1,21,Hibernating,United Kingdom
 13692.0,25,5,3114.4,4,4,5,44,Loyal Customers,United Kingdom
-13693.0,374,9,2011.82,2,5,4,25,Can't Loose,United Kingdom
+13693.0,374,9,2011.82,2,5,4,25,Can't Lose,United Kingdom
 13694.0,4,143,196482.81,5,5,5,55,Champions,United Kingdom
 13695.0,31,16,2770.73,4,5,4,45,Loyal Customers,United Kingdom
 13696.0,422,3,2020.4,1,3,4,13,At Risk,United Kingdom
@@ -1347,11 +1347,11 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 13708.0,271,1,296.88,2,1,2,21,Hibernating,United Kingdom
 13709.0,4,18,7591.75,5,5,5,55,Champions,United Kingdom
 13710.0,32,3,509.52,4,3,2,43,Potential Loyalists,United Kingdom
-13711.0,219,9,1792.26,2,5,4,25,Can't Loose,United Kingdom
+13711.0,219,9,1792.26,2,5,4,25,Can't Lose,United Kingdom
 13712.0,247,2,766.42,2,2,3,22,Hibernating,United Kingdom
 13713.0,408,3,743.26,2,3,3,23,At Risk,United Kingdom
 13714.0,465,1,161.35,1,1,1,11,Hibernating,United Kingdom
-13715.0,281,17,8483.29,2,5,5,25,Can't Loose,United Kingdom
+13715.0,281,17,8483.29,2,5,5,25,Can't Lose,United Kingdom
 13716.0,269,1,138.28,2,1,1,21,Hibernating,United Kingdom
 13717.0,32,8,1763.3,4,4,4,44,Loyal Customers,United Kingdom
 13718.0,246,2,306.55,2,2,2,22,Hibernating,United Kingdom
@@ -1586,7 +1586,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 13949.0,3,6,2427.32,5,4,4,54,Champions,United Kingdom
 13950.0,11,4,745.06,5,3,3,53,Potential Loyalists,United Kingdom
 13951.0,176,3,674.45,3,3,3,33,Need Attention,United Kingdom
-13952.0,218,14,12823.521,2,5,5,25,Can't Loose,United Kingdom
+13952.0,218,14,12823.521,2,5,5,25,Can't Lose,United Kingdom
 13953.0,7,12,6640.68,5,5,5,55,Champions,United Kingdom
 13954.0,2,2,439.92,5,2,2,52,Potential Loyalists,United Kingdom
 13955.0,154,3,545.17,3,3,2,33,Need Attention,United Kingdom
@@ -1597,7 +1597,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 13960.0,21,2,230.22,4,2,1,42,Potential Loyalists,United Kingdom
 13961.0,392,1,538.4,2,1,2,21,Hibernating,United Kingdom
 13962.0,22,3,362.8,4,3,2,43,Potential Loyalists,United Kingdom
-13963.0,308,17,3011.87,2,5,5,25,Can't Loose,United Kingdom
+13963.0,308,17,3011.87,2,5,5,25,Can't Lose,United Kingdom
 13964.0,387,2,438.9,2,2,2,22,Hibernating,United Kingdom
 13965.0,477,3,996.61,1,3,3,13,At Risk,United Kingdom
 13966.0,435,1,390.86,1,1,2,11,Hibernating,United Kingdom
@@ -1697,7 +1697,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 14060.0,5,30,9519.08,5,5,5,55,Champions,United Kingdom
 14061.0,507,3,917.4300000000001,1,3,3,13,At Risk,United Kingdom
 14062.0,10,24,25604.2,5,5,5,55,Champions,United Kingdom
-14063.0,438,9,22710.2,1,5,5,15,Can't Loose,United Kingdom
+14063.0,438,9,22710.2,1,5,5,15,Can't Lose,United Kingdom
 14064.0,29,15,3332.42,4,5,5,45,Loyal Customers,United Kingdom
 14065.0,389,3,891.02,2,3,3,23,At Risk,United Kingdom
 14066.0,267,1,152.55,2,1,1,21,Hibernating,United Kingdom
@@ -1715,7 +1715,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 14078.0,102,9,1692.6299999999999,3,5,4,35,Loyal Customers,United Kingdom
 14079.0,125,2,618.73,3,2,3,32,About To Sleep,United Kingdom
 14080.0,33,5,1115.68,4,4,3,44,Loyal Customers,United Kingdom
-14081.0,302,10,5370.1,2,5,5,25,Can't Loose,United Kingdom
+14081.0,302,10,5370.1,2,5,5,25,Can't Lose,United Kingdom
 14082.0,365,2,413.36,2,2,2,22,Hibernating,United Kingdom
 14083.0,4,11,1407.26,5,5,4,55,Champions,United Kingdom
 14084.0,512,1,150.5,1,1,1,11,Hibernating,United Kingdom
@@ -1766,7 +1766,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 14131.0,649,1,187.87,1,1,1,11,Hibernating,United Kingdom
 14132.0,2,11,3586.0299999999997,5,5,5,55,Champions,United Kingdom
 14133.0,130,4,911.14,3,3,3,33,Need Attention,United Kingdom
-14134.0,383,15,11123.35,2,5,5,25,Can't Loose,United Kingdom
+14134.0,383,15,11123.35,2,5,5,25,Can't Lose,United Kingdom
 14135.0,2,24,9643.92,5,5,5,55,Champions,United Kingdom
 14136.0,401,5,1570.81,2,4,4,24,At Risk,United Kingdom
 14137.0,696,1,332.7,1,1,2,11,Hibernating,United Kingdom
@@ -1881,7 +1881,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 14246.0,111,3,1474.06,3,3,4,33,Need Attention,United Kingdom
 14247.0,278,5,772.66,2,4,3,24,At Risk,United Kingdom
 14248.0,318,3,1032.95,2,3,3,23,At Risk,United Kingdom
-14249.0,411,12,5625.461,1,5,5,15,Can't Loose,United Kingdom
+14249.0,411,12,5625.461,1,5,5,15,Can't Lose,United Kingdom
 14250.0,7,3,1904.05,5,3,4,53,Potential Loyalists,United Kingdom
 14251.0,2,5,2879.7000000000003,5,4,4,54,Champions,United Kingdom
 14252.0,381,1,350.99,2,1,2,21,Hibernating,United Kingdom
@@ -2095,7 +2095,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 14462.0,66,12,2270.01,3,5,4,35,Loyal Customers,United Kingdom
 14463.0,98,4,786.5699999999999,3,3,3,33,Need Attention,United Kingdom
 14464.0,568,2,111.0,1,2,1,12,Hibernating,United Kingdom
-14465.0,247,11,3946.03,2,5,5,25,Can't Loose,United Kingdom
+14465.0,247,11,3946.03,2,5,5,25,Can't Lose,United Kingdom
 14466.0,29,13,4646.9,4,5,5,45,Loyal Customers,United Kingdom
 14467.0,18,12,2220.9900000000002,5,5,4,55,Champions,United Kingdom
 14468.0,734,1,204.24,1,1,1,11,Hibernating,United Kingdom
@@ -2162,7 +2162,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 14529.0,60,3,620.04,3,3,3,33,Need Attention,United Kingdom
 14530.0,26,16,6197.4,4,5,5,45,Loyal Customers,United Kingdom
 14531.0,480,1,376.34,1,1,2,11,Hibernating,United Kingdom
-14532.0,236,11,3859.1800000000003,2,5,5,25,Can't Loose,United Kingdom
+14532.0,236,11,3859.1800000000003,2,5,5,25,Can't Lose,United Kingdom
 14533.0,25,11,3466.37,4,5,5,45,Loyal Customers,United Kingdom
 14534.0,3,26,6271.11,5,5,5,55,Champions,United Kingdom
 14535.0,60,9,6030.7300000000005,3,5,5,35,Loyal Customers,United Kingdom
@@ -2220,7 +2220,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 14587.0,19,9,1601.14,5,5,4,55,Champions,United Kingdom
 14588.0,578,1,135.39,1,1,1,11,Hibernating,United Kingdom
 14589.0,372,1,79.5,2,1,1,21,Hibernating,United Kingdom
-14590.0,425,20,3006.62,1,5,5,15,Can't Loose,United Kingdom
+14590.0,425,20,3006.62,1,5,5,15,Can't Lose,United Kingdom
 14591.0,15,4,1447.14,5,3,4,53,Potential Loyalists,United Kingdom
 14592.0,35,3,570.46,4,3,2,43,Potential Loyalists,United Kingdom
 14593.0,22,12,3712.0099999999998,4,5,5,45,Loyal Customers,United Kingdom
@@ -2255,7 +2255,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 14622.0,185,1,320.58000000000004,3,1,2,31,About To Sleep,United Kingdom
 14623.0,32,10,2059.58,4,5,4,45,Loyal Customers,United Kingdom
 14624.0,57,6,814.07,4,4,3,44,Loyal Customers,United Kingdom
-14625.0,196,11,4497.88,2,5,5,25,Can't Loose,United Kingdom
+14625.0,196,11,4497.88,2,5,5,25,Can't Lose,United Kingdom
 14626.0,24,11,5410.92,4,5,5,45,Loyal Customers,United Kingdom
 14627.0,379,1,462.75,2,1,2,21,Hibernating,United Kingdom
 14628.0,91,5,1998.0,3,4,4,34,Loyal Customers,United Kingdom
@@ -2278,7 +2278,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 14645.0,157,3,876.89,3,3,3,33,Need Attention,United Kingdom
 14646.0,2,151,528602.52,5,5,5,55,Champions,Netherlands
 14647.0,201,2,519.97,2,2,2,22,Hibernating,United Kingdom
-14648.0,416,15,4546.86,1,5,5,15,Can't Loose,United Kingdom
+14648.0,416,15,4546.86,1,5,5,15,Can't Lose,United Kingdom
 14649.0,5,9,3775.31,5,5,5,55,Champions,United Kingdom
 14650.0,589,1,62.5,1,1,1,11,Hibernating,United Kingdom
 14651.0,67,9,2034.1200000000001,3,5,4,35,Loyal Customers,United Kingdom
@@ -2370,7 +2370,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 14737.0,4,4,3554.17,5,3,5,53,Potential Loyalists,United Kingdom
 14738.0,43,9,1821.9,4,5,4,45,Loyal Customers,United Kingdom
 14739.0,4,25,12287.5,5,5,5,55,Champions,United Kingdom
-14740.0,197,11,4161.06,2,5,5,25,Can't Loose,United Kingdom
+14740.0,197,11,4161.06,2,5,5,25,Can't Lose,United Kingdom
 14741.0,12,7,1897.59,5,4,4,54,Champions,United Kingdom
 14742.0,435,1,579.85,1,1,2,11,Hibernating,United Kingdom
 14743.0,593,1,50.48,1,1,1,11,Hibernating,United Kingdom
@@ -2455,7 +2455,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 14824.0,10,10,4022.9100000000003,5,5,5,55,Champions,United Kingdom
 14825.0,4,24,4925.08,5,5,5,55,Champions,United Kingdom
 14826.0,582,2,385.2,1,2,2,12,Hibernating,United Kingdom
-14828.0,197,13,9839.460000000001,2,5,5,25,Can't Loose,United Kingdom
+14828.0,197,13,9839.460000000001,2,5,5,25,Can't Lose,United Kingdom
 14829.0,29,7,1692.84,4,4,4,44,Loyal Customers,United Kingdom
 14830.0,53,1,197.13,4,1,1,41,Promising,United Kingdom
 14831.0,680,3,1676.57,1,3,4,13,At Risk,United Kingdom
@@ -2636,9 +2636,9 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 15010.0,36,1,308.94,4,1,2,41,Promising,United Kingdom
 15011.0,396,2,416.6,2,2,2,22,Hibernating,United Kingdom
 15012.0,54,3,860.62,4,3,3,43,Potential Loyalists,United Kingdom
-15013.0,488,10,1641.3,1,5,4,15,Can't Loose,United Kingdom
+15013.0,488,10,1641.3,1,5,4,15,Can't Lose,United Kingdom
 15014.0,43,2,260.17,4,2,1,42,Potential Loyalists,United Kingdom
-15015.0,501,13,2365.02,1,5,4,15,Can't Loose,United Kingdom
+15015.0,501,13,2365.02,1,5,4,15,Can't Lose,United Kingdom
 15016.0,173,5,630.3,3,4,3,34,Loyal Customers,United Kingdom
 15017.0,34,1,125.58,4,1,1,41,Promising,United Kingdom
 15018.0,39,3,607.46,4,3,2,43,Potential Loyalists,United Kingdom
@@ -2702,7 +2702,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 15076.0,173,3,1447.74,3,3,4,33,Need Attention,United Kingdom
 15077.0,495,2,2428.08,1,2,4,12,Hibernating,United Kingdom
 15078.0,7,53,17761.88,5,5,5,55,Champions,United Kingdom
-15079.0,213,11,3767.35,2,5,5,25,Can't Loose,United Kingdom
+15079.0,213,11,3767.35,2,5,5,25,Can't Lose,United Kingdom
 15080.0,428,2,546.25,1,2,2,12,Hibernating,United Kingdom
 15081.0,22,12,1965.72,4,5,4,45,Loyal Customers,United Kingdom
 15082.0,669,1,93.35000000000001,1,1,1,11,Hibernating,United Kingdom
@@ -2730,7 +2730,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 15104.0,197,2,1027.44,2,2,3,22,Hibernating,United Kingdom
 15105.0,18,9,3094.91,5,5,5,55,Champions,United Kingdom
 15106.0,18,5,1422.52,5,4,4,54,Champions,United Kingdom
-15107.0,311,9,940.35,2,5,3,25,Can't Loose,United Kingdom
+15107.0,311,9,940.35,2,5,3,25,Can't Lose,United Kingdom
 15108.0,142,4,1300.25,3,3,4,33,Need Attention,European Community
 15109.0,246,3,983.1,2,3,3,23,At Risk,United Kingdom
 15110.0,24,6,1505.8500000000001,4,4,4,44,Loyal Customers,United Kingdom
@@ -2845,7 +2845,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 15219.0,176,2,685.45,3,2,3,32,About To Sleep,United Kingdom
 15220.0,52,6,1778.96,4,4,4,44,Loyal Customers,United Kingdom
 15221.0,366,4,2465.4500000000003,2,3,4,23,At Risk,United Kingdom
-15222.0,319,11,3550.91,2,5,5,25,Can't Loose,United Kingdom
+15222.0,319,11,3550.91,2,5,5,25,Can't Lose,United Kingdom
 15223.0,226,5,1417.95,2,4,4,24,At Risk,United Kingdom
 15224.0,358,5,871.36,2,4,3,24,At Risk,United Kingdom
 15225.0,234,1,409.40000000000003,2,1,2,21,Hibernating,United Kingdom
@@ -2858,7 +2858,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 15232.0,113,2,612.06,3,2,2,32,About To Sleep,United Kingdom
 15233.0,401,1,59.400000000000006,2,1,1,21,Hibernating,United Kingdom
 15234.0,277,1,197.0,2,1,1,21,Hibernating,United Kingdom
-15235.0,218,16,2937.81,2,5,4,25,Can't Loose,United Kingdom
+15235.0,218,16,2937.81,2,5,4,25,Can't Lose,United Kingdom
 15236.0,299,1,321.05,2,1,2,21,Hibernating,United Kingdom
 15237.0,2,4,1412.32,5,3,4,53,Potential Loyalists,United Kingdom
 15238.0,29,3,1071.99,4,3,3,43,Potential Loyalists,United Kingdom
@@ -2991,7 +2991,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 15366.0,75,7,2389.08,3,4,4,34,Loyal Customers,United Kingdom
 15367.0,57,11,5081.33,4,5,5,45,Loyal Customers,United Kingdom
 15368.0,21,2,722.74,4,2,3,42,Potential Loyalists,United Kingdom
-15369.0,492,11,6251.26,1,5,5,15,Can't Loose,United Kingdom
+15369.0,492,11,6251.26,1,5,5,15,Can't Lose,United Kingdom
 15370.0,41,8,3739.01,4,4,5,44,Loyal Customers,United Kingdom
 15371.0,662,1,59.400000000000006,1,1,1,11,Hibernating,United Kingdom
 15372.0,137,8,6017.06,3,4,5,34,Loyal Customers,United Kingdom
@@ -3077,7 +3077,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 15453.0,2,7,1388.37,5,4,4,54,Champions,United Kingdom
 15454.0,362,2,307.69,2,2,2,22,Hibernating,United Kingdom
 15455.0,598,1,38.25,1,1,1,11,Hibernating,United Kingdom
-15456.0,283,10,2119.27,2,5,4,25,Can't Loose,United Kingdom
+15456.0,283,10,2119.27,2,5,4,25,Can't Lose,United Kingdom
 15457.0,262,1,237.07,2,1,1,21,Hibernating,United Kingdom
 15458.0,25,2,370.43999999999994,4,2,2,42,Potential Loyalists,United Kingdom
 15459.0,417,2,202.82999999999998,1,2,1,12,Hibernating,United Kingdom
@@ -3228,7 +3228,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 15604.0,52,1,216.39,4,1,1,41,Promising,United Kingdom
 15605.0,36,9,1936.8,4,5,4,45,Loyal Customers,United Kingdom
 15606.0,61,17,5230.99,3,5,5,35,Loyal Customers,United Kingdom
-15607.0,337,9,1708.97,2,5,4,25,Can't Loose,United Kingdom
+15607.0,337,9,1708.97,2,5,4,25,Can't Lose,United Kingdom
 15608.0,28,5,1785.98,4,4,4,44,Loyal Customers,United Kingdom
 15609.0,184,1,298.48,3,1,2,31,About To Sleep,United Kingdom
 15610.0,52,1,112.46000000000001,4,1,1,41,Promising,United Kingdom
@@ -3254,7 +3254,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 15630.0,45,3,1481.4,4,3,4,43,Potential Loyalists,United Kingdom
 15631.0,642,1,596.67,1,1,2,11,Hibernating,United Kingdom
 15632.0,16,8,3285.31,5,4,5,54,Champions,United Kingdom
-15633.0,509,13,4352.46,1,5,5,15,Can't Loose,United Kingdom
+15633.0,509,13,4352.46,1,5,5,15,Can't Lose,United Kingdom
 15634.0,17,2,554.65,5,2,2,52,Potential Loyalists,United Kingdom
 15635.0,396,1,100.35,2,1,1,21,Hibernating,United Kingdom
 15636.0,90,4,1444.58,3,3,4,33,Need Attention,United Kingdom
@@ -3353,7 +3353,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 15729.0,213,3,192.55,2,3,1,23,At Risk,United Kingdom
 15730.0,66,5,1726.58,3,4,4,34,Loyal Customers,United Kingdom
 15731.0,554,1,125.3,1,1,1,11,Hibernating,United Kingdom
-15732.0,212,10,1682.07,2,5,4,25,Can't Loose,United Kingdom
+15732.0,212,10,1682.07,2,5,4,25,Can't Lose,United Kingdom
 15733.0,283,1,162.3,2,1,1,21,Hibernating,United Kingdom
 15734.0,115,4,2263.3,3,3,4,33,Need Attention,United Kingdom
 15735.0,421,1,327.68,1,1,2,11,Hibernating,United Kingdom
@@ -3372,7 +3372,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 15748.0,40,3,614.7600000000001,4,3,2,43,Potential Loyalists,United Kingdom
 15749.0,235,3,44534.3,2,3,5,23,At Risk,United Kingdom
 15750.0,3,18,6797.191,5,5,5,55,Champions,United Kingdom
-15751.0,461,11,1380.44,1,5,4,15,Can't Loose,United Kingdom
+15751.0,461,11,1380.44,1,5,4,15,Can't Lose,United Kingdom
 15752.0,40,9,4207.54,4,5,5,45,Loyal Customers,United Kingdom
 15753.0,305,1,79.2,2,1,1,21,Hibernating,United Kingdom
 15754.0,51,9,3037.61,4,5,5,45,Loyal Customers,United Kingdom
@@ -3428,7 +3428,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 15805.0,23,30,10189.23,4,5,5,45,Loyal Customers,United Kingdom
 15806.0,46,3,784.58,4,3,3,43,Potential Loyalists,United Kingdom
 15807.0,50,5,1817.52,4,4,4,44,Loyal Customers,United Kingdom
-15808.0,306,21,18409.93,2,5,5,25,Can't Loose,United Kingdom
+15808.0,306,21,18409.93,2,5,5,25,Can't Lose,United Kingdom
 15809.0,36,7,1274.44,4,4,4,44,Loyal Customers,United Kingdom
 15810.0,79,8,2999.04,3,4,5,34,Loyal Customers,United Kingdom
 15811.0,22,7,3890.52,4,4,5,44,Loyal Customers,United Kingdom
@@ -3627,7 +3627,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 16007.0,48,7,3075.14,4,4,5,44,Loyal Customers,United Kingdom
 16008.0,24,15,5384.13,4,5,5,45,Loyal Customers,United Kingdom
 16009.0,22,4,992.71,4,4,3,44,Loyal Customers,United Kingdom
-16010.0,246,11,1724.06,2,5,4,25,Can't Loose,United Kingdom
+16010.0,246,11,1724.06,2,5,4,25,Can't Lose,United Kingdom
 16011.0,8,29,5880.46,5,5,5,55,Champions,United Kingdom
 16012.0,35,5,2989.79,4,4,5,44,Loyal Customers,United Kingdom
 16013.0,4,84,57446.44,5,5,5,55,Champions,United Kingdom
@@ -3682,7 +3682,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 16062.0,10,8,2863.45,5,5,4,55,Champions,United Kingdom
 16063.0,260,1,335.32,2,1,2,21,Hibernating,United Kingdom
 16064.0,725,1,111.0,1,1,1,11,Hibernating,United Kingdom
-16065.0,365,8,2382.62,2,5,4,25,Can't Loose,United Kingdom
+16065.0,365,8,2382.62,2,5,4,25,Can't Lose,United Kingdom
 16066.0,17,5,1521.87,5,4,4,54,Champions,United Kingdom
 16067.0,563,3,3395.29,1,3,5,13,At Risk,United Kingdom
 16068.0,594,1,122.93,1,1,1,11,Hibernating,United Kingdom
@@ -3742,7 +3742,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 16122.0,73,6,1001.34,3,4,3,34,Loyal Customers,United Kingdom
 16123.0,52,1,307.78,4,1,2,41,Promising,United Kingdom
 16124.0,317,4,1772.49,2,4,4,24,At Risk,United Kingdom
-16125.0,367,14,4587.65,2,5,5,25,Can't Loose,United Kingdom
+16125.0,367,14,4587.65,2,5,5,25,Can't Lose,United Kingdom
 16126.0,29,15,14646.800000000001,4,5,5,45,Loyal Customers,United Kingdom
 16127.0,39,2,801.31,4,2,3,42,Potential Loyalists,United Kingdom
 16128.0,18,11,3801.05,5,5,5,55,Champions,United Kingdom
@@ -3773,7 +3773,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 16155.0,382,5,796.9,2,4,3,24,At Risk,United Kingdom
 16156.0,9,20,6218.18,5,5,5,55,Champions,United Kingdom
 16157.0,16,3,656.69,5,3,3,53,Potential Loyalists,United Kingdom
-16158.0,522,9,628.32,1,5,3,15,Can't Loose,United Kingdom
+16158.0,522,9,628.32,1,5,3,15,Can't Lose,United Kingdom
 16159.0,282,4,1232.79,2,4,3,24,At Risk,United Kingdom
 16160.0,65,2,1025.44,3,2,3,32,About To Sleep,United Kingdom
 16161.0,2,43,12831.8,5,5,5,55,Champions,United Kingdom
@@ -3812,12 +3812,12 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 16194.0,375,1,308.59999999999997,2,1,2,21,Hibernating,United Kingdom
 16195.0,723,1,323.25,1,1,2,11,Hibernating,United Kingdom
 16196.0,489,1,93.3,1,1,1,11,Hibernating,United Kingdom
-16197.0,469,9,2016.71,1,5,4,15,Can't Loose,United Kingdom
+16197.0,469,9,2016.71,1,5,4,15,Can't Lose,United Kingdom
 16198.0,75,2,1030.0410000000002,3,2,3,32,About To Sleep,United Kingdom
 16199.0,392,7,942.75,2,4,3,24,At Risk,United Kingdom
 16200.0,4,12,5643.45,5,5,5,55,Champions,United Kingdom
 16201.0,3,5,2112.12,5,4,4,54,Champions,United Kingdom
-16202.0,361,9,2501.9900000000002,2,5,4,25,Can't Loose,United Kingdom
+16202.0,361,9,2501.9900000000002,2,5,4,25,Can't Lose,United Kingdom
 16203.0,59,6,1114.54,4,4,3,44,Loyal Customers,United Kingdom
 16204.0,23,3,944.24,4,3,3,43,Potential Loyalists,United Kingdom
 16205.0,31,7,1830.61,4,4,4,44,Loyal Customers,United Kingdom
@@ -3965,7 +3965,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 16348.0,32,8,1798.22,4,5,4,45,Loyal Customers,United Kingdom
 16349.0,291,1,53.5,2,1,1,21,Hibernating,United Kingdom
 16350.0,21,9,2253.89,4,5,4,45,Loyal Customers,United Kingdom
-16351.0,333,13,3330.0299999999997,2,5,5,25,Can't Loose,United Kingdom
+16351.0,333,13,3330.0299999999997,2,5,5,25,Can't Lose,United Kingdom
 16352.0,18,2,494.44,5,2,2,52,Potential Loyalists,United Kingdom
 16353.0,4,38,9999.460000000001,5,5,5,55,Champions,United Kingdom
 16354.0,63,5,1129.51,3,4,3,34,Loyal Customers,United Kingdom
@@ -4113,7 +4113,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 16496.0,9,6,2330.77,5,4,4,54,Champions,United Kingdom
 16497.0,50,23,6695.28,4,5,5,45,Loyal Customers,United Kingdom
 16498.0,161,2,100.97,3,2,1,32,About To Sleep,United Kingdom
-16499.0,360,8,2578.34,2,5,4,25,Can't Loose,United Kingdom
+16499.0,360,8,2578.34,2,5,4,25,Can't Lose,United Kingdom
 16500.0,5,9,843.9100000000001,5,5,3,55,Champions,United Kingdom
 16501.0,383,1,1237.23,2,1,3,21,Hibernating,United Kingdom
 16502.0,620,2,266.5,1,2,1,12,Hibernating,United Kingdom
@@ -4334,7 +4334,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 16722.0,17,22,8989.08,5,5,5,55,Champions,United Kingdom
 16723.0,91,4,1301.63,3,4,4,34,Loyal Customers,United Kingdom
 16724.0,405,1,147.35,2,2,1,22,Hibernating,United Kingdom
-16725.0,302,14,1882.11,2,5,4,25,Can't Loose,United Kingdom
+16725.0,302,14,1882.11,2,5,4,25,Can't Lose,United Kingdom
 16726.0,26,7,2088.41,4,4,4,44,Loyal Customers,United Kingdom
 16727.0,364,4,1437.42,2,4,4,24,At Risk,United Kingdom
 16728.0,46,4,1054.67,4,4,3,44,Loyal Customers,United Kingdom
@@ -4363,7 +4363,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 16751.0,31,1,1764.72,4,2,4,42,Potential Loyalists,United Kingdom
 16752.0,373,1,415.0,2,2,2,22,Hibernating,United Kingdom
 16753.0,58,1,223.92000000000002,4,2,1,42,Potential Loyalists,United Kingdom
-16754.0,372,29,67502.47,2,5,5,25,Can't Loose,United Kingdom
+16754.0,372,29,67502.47,2,5,5,25,Can't Lose,United Kingdom
 16755.0,114,7,2900.58,3,4,4,34,Loyal Customers,United Kingdom
 16756.0,215,7,1312.3700000000001,2,4,4,24,At Risk,United Kingdom
 16757.0,319,2,270.48,2,2,1,22,Hibernating,United Kingdom
@@ -4466,7 +4466,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 16855.0,24,2,328.4,4,3,2,43,Potential Loyalists,United Kingdom
 16856.0,15,3,358.49,5,3,2,53,Potential Loyalists,United Kingdom
 16857.0,443,1,352.8,1,2,2,12,Hibernating,United Kingdom
-16858.0,369,10,4668.28,2,5,5,25,Can't Loose,United Kingdom
+16858.0,369,10,4668.28,2,5,5,25,Can't Lose,United Kingdom
 16859.0,145,7,1932.41,3,4,4,34,Loyal Customers,United Kingdom
 16860.0,453,3,1610.62,1,3,4,13,At Risk,United Kingdom
 16861.0,60,5,946.59,3,4,3,34,Loyal Customers,United Kingdom
@@ -4635,7 +4635,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 17029.0,111,7,2137.3,3,4,4,34,Loyal Customers,United Kingdom
 17030.0,64,1,146.87,3,2,1,32,About To Sleep,United Kingdom
 17031.0,12,6,2773.85,5,4,4,54,Champions,United Kingdom
-17032.0,548,8,3004.6,1,5,5,15,Can't Loose,United Kingdom
+17032.0,548,8,3004.6,1,5,5,15,Can't Lose,United Kingdom
 17033.0,86,4,1332.79,3,4,4,34,Loyal Customers,United Kingdom
 17034.0,16,5,1283.92,5,4,4,54,Champions,United Kingdom
 17035.0,246,4,613.59,2,4,2,24,At Risk,United Kingdom
@@ -4832,7 +4832,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 17227.0,19,12,2022.03,5,5,4,55,Champions,United Kingdom
 17228.0,16,13,3177.24,5,5,5,55,Champions,United Kingdom
 17229.0,96,2,318.76,3,3,2,33,Need Attention,United Kingdom
-17230.0,264,18,9924.95,2,5,5,25,Can't Loose,United Kingdom
+17230.0,264,18,9924.95,2,5,5,25,Can't Lose,United Kingdom
 17231.0,12,25,7197.04,5,5,5,55,Champions,United Kingdom
 17232.0,3,2,421.52,5,3,2,53,Potential Loyalists,United Kingdom
 17233.0,35,3,560.86,4,3,2,43,Potential Loyalists,United Kingdom
@@ -4843,7 +4843,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 17238.0,3,32,7783.1,5,5,5,55,Champions,United Kingdom
 17239.0,313,4,1189.45,2,4,3,24,At Risk,United Kingdom
 17240.0,596,1,130.6,1,2,1,12,Hibernating,United Kingdom
-17241.0,385,12,2744.14,2,5,4,25,Can't Loose,United Kingdom
+17241.0,385,12,2744.14,2,5,4,25,Can't Lose,United Kingdom
 17242.0,108,5,2889.28,3,4,4,34,Loyal Customers,United Kingdom
 17243.0,1,69,20889.86,5,5,5,55,Champions,United Kingdom
 17244.0,53,5,1826.04,4,4,4,44,Loyal Customers,United Kingdom
@@ -4909,7 +4909,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 17304.0,534,1,111.5,1,2,1,12,Hibernating,United Kingdom
 17305.0,649,1,2135.46,1,2,4,12,Hibernating,United Kingdom
 17306.0,11,21,9782.35,5,5,5,55,Champions,United Kingdom
-17307.0,395,11,3999.8900000000003,2,5,5,25,Can't Loose,United Kingdom
+17307.0,395,11,3999.8900000000003,2,5,5,25,Can't Lose,United Kingdom
 17308.0,393,2,4511.76,2,3,5,23,At Risk,United Kingdom
 17309.0,95,3,330.59000000000003,3,3,2,33,Need Attention,United Kingdom
 17310.0,387,2,1025.1,2,3,3,23,At Risk,United Kingdom
@@ -5007,7 +5007,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 17403.0,36,2,400.57,4,3,2,43,Potential Loyalists,United Kingdom
 17404.0,4,23,47781.12,5,5,5,55,Champions,Sweden
 17405.0,1,3,1031.41,5,3,3,53,Potential Loyalists,United Kingdom
-17406.0,333,13,4905.05,2,5,5,25,Can't Loose,United Kingdom
+17406.0,333,13,4905.05,2,5,5,25,Can't Lose,United Kingdom
 17407.0,412,1,552.9,1,2,2,12,Hibernating,United Kingdom
 17408.0,163,3,316.09000000000003,3,3,2,33,Need Attention,United Kingdom
 17409.0,185,10,7793.51,3,5,5,35,Loyal Customers,United Kingdom
@@ -5047,12 +5047,12 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 17444.0,148,3,2940.04,3,3,4,33,Need Attention,Canada
 17446.0,177,2,120.9,3,3,1,33,Need Attention,United Kingdom
 17447.0,40,2,541.53,4,3,2,43,Potential Loyalists,United Kingdom
-17448.0,497,46,14556.97,1,5,5,15,Can't Loose,United Kingdom
+17448.0,497,46,14556.97,1,5,5,15,Can't Lose,United Kingdom
 17449.0,2,13,4951.15,5,5,5,55,Champions,United Kingdom
 17450.0,8,51,246973.09,5,5,5,55,Champions,United Kingdom
 17451.0,1,7,1721.4,5,4,4,54,Champions,United Kingdom
 17453.0,18,2,486.71999999999997,5,3,2,53,Potential Loyalists,United Kingdom
-17454.0,192,10,1547.94,2,5,4,25,Can't Loose,United Kingdom
+17454.0,192,10,1547.94,2,5,4,25,Can't Lose,United Kingdom
 17455.0,204,1,131.7,2,2,1,22,Hibernating,United Kingdom
 17456.0,365,2,1225.42,2,3,3,23,At Risk,United Kingdom
 17457.0,127,14,5984.8099999999995,3,5,5,35,Loyal Customers,United Kingdom
@@ -5101,11 +5101,11 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 17501.0,221,2,288.6,2,3,1,23,At Risk,United Kingdom
 17502.0,9,4,689.1,5,4,3,54,Champions,United Kingdom
 17503.0,3,2,558.96,5,3,2,53,Potential Loyalists,United Kingdom
-17504.0,206,18,9565.12,2,5,5,25,Can't Loose,United Kingdom
+17504.0,206,18,9565.12,2,5,5,25,Can't Lose,United Kingdom
 17505.0,162,5,2435.48,3,4,4,34,Loyal Customers,United Kingdom
 17506.0,76,1,302.2,3,2,2,32,About To Sleep,United Kingdom
 17507.0,262,2,605.58,2,3,2,23,At Risk,United Kingdom
-17508.0,281,8,4579.23,2,5,5,25,Can't Loose,Greece
+17508.0,281,8,4579.23,2,5,5,25,Can't Lose,Greece
 17509.0,58,8,6115.14,4,5,5,45,Loyal Customers,United Kingdom
 17510.0,25,2,514.56,4,3,2,43,Potential Loyalists,United Kingdom
 17511.0,3,60,175603.55,5,5,5,55,Champions,United Kingdom
@@ -5146,7 +5146,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 17547.0,376,2,727.85,2,3,3,23,At Risk,United Kingdom
 17548.0,234,4,731.26,2,4,3,24,At Risk,United Kingdom
 17549.0,24,2,148.86,4,3,1,43,Potential Loyalists,United Kingdom
-17550.0,197,9,2547.64,2,5,4,25,Can't Loose,United Kingdom
+17550.0,197,9,2547.64,2,5,4,25,Can't Lose,United Kingdom
 17551.0,359,1,306.84,2,2,2,22,Hibernating,United Kingdom
 17552.0,60,12,3085.29,3,5,5,35,Loyal Customers,United Kingdom
 17553.0,130,4,3757.6,3,4,5,34,Loyal Customers,United Kingdom
@@ -5239,7 +5239,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 17642.0,120,5,1824.49,3,4,4,34,Loyal Customers,United Kingdom
 17643.0,373,2,541.25,2,3,2,23,At Risk,United Kingdom
 17644.0,1,20,6028.6,5,5,5,55,Champions,United Kingdom
-17646.0,219,12,4149.79,2,5,5,25,Can't Loose,United Kingdom
+17646.0,219,12,4149.79,2,5,5,25,Can't Lose,United Kingdom
 17647.0,65,3,331.65999999999997,3,3,2,33,Need Attention,United Kingdom
 17648.0,61,5,2216.37,3,4,4,34,Loyal Customers,United Kingdom
 17649.0,138,3,1578.89,3,3,4,33,Need Attention,United Kingdom
@@ -5324,7 +5324,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 17729.0,596,1,438.65000000000003,1,2,2,12,Hibernating,United Kingdom
 17730.0,3,20,7773.8,5,5,5,55,Champions,United Kingdom
 17731.0,79,6,1708.99,3,4,4,34,Loyal Customers,United Kingdom
-17732.0,373,8,2470.39,2,5,4,25,Can't Loose,United Kingdom
+17732.0,373,8,2470.39,2,5,4,25,Can't Lose,United Kingdom
 17733.0,39,2,692.19,4,3,3,43,Potential Loyalists,United Kingdom
 17734.0,54,6,1442.32,4,4,4,44,Loyal Customers,United Kingdom
 17735.0,2,26,17244.93,5,5,5,55,Champions,United Kingdom
@@ -5440,8 +5440,8 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 17846.0,85,1,2033.1,3,2,4,32,About To Sleep,United Kingdom
 17847.0,516,2,129.69,1,3,1,13,At Risk,United Kingdom
 17848.0,81,30,3650.9,3,5,5,35,Loyal Customers,United Kingdom
-17849.0,218,8,1063.76,2,5,3,25,Can't Loose,United Kingdom
-17850.0,372,155,56600.08,2,5,5,25,Can't Loose,United Kingdom
+17849.0,218,8,1063.76,2,5,3,25,Can't Lose,United Kingdom
+17850.0,372,155,56600.08,2,5,5,25,Can't Lose,United Kingdom
 17851.0,422,6,1563.34,1,4,4,14,At Risk,United Kingdom
 17852.0,12,5,663.21,5,4,3,54,Champions,United Kingdom
 17853.0,407,3,1608.19,2,3,4,23,At Risk,United Kingdom
@@ -5599,7 +5599,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 18006.0,23,4,997.86,4,4,3,44,Loyal Customers,United Kingdom
 18007.0,393,1,220.32,2,2,1,22,Hibernating,United Kingdom
 18008.0,70,23,19787.13,3,5,5,35,Loyal Customers,United Kingdom
-18009.0,235,8,2155.83,2,5,4,25,Can't Loose,United Kingdom
+18009.0,235,8,2155.83,2,5,4,25,Can't Lose,United Kingdom
 18010.0,257,1,174.8,2,2,1,22,Hibernating,United Kingdom
 18011.0,373,2,527.03,2,3,2,23,At Risk,United Kingdom
 18012.0,723,1,115.3,1,2,1,12,Hibernating,United Kingdom
@@ -5820,7 +5820,7 @@ Customer ID,Recency,Frequency,Monetary,RecencyScore,FrequencyScore,MonetaryScore
 18228.0,57,2,779.9,4,3,3,43,Potential Loyalists,United Kingdom
 18229.0,12,28,10803.710000000001,5,5,5,55,Champions,United Kingdom
 18230.0,9,9,4291.06,5,5,5,55,Champions,United Kingdom
-18231.0,192,28,6880.97,2,5,5,25,Can't Loose,United Kingdom
+18231.0,192,28,6880.97,2,5,5,25,Can't Lose,United Kingdom
 18232.0,82,4,592.97,3,4,2,34,Loyal Customers,United Kingdom
 18233.0,326,1,440.0,2,2,2,22,Hibernating,United Kingdom
 18234.0,552,1,179.6,1,2,1,12,Hibernating,United Kingdom
