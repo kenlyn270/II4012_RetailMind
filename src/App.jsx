@@ -5,6 +5,8 @@ import HighRiskTable from "./components/HighRiskTable";
 import RFMMap from "./components/RFMMap";
 import SegmentBreakdown from "./components/SegmentBreakdown";
 import WhatsAppCampaign from "./components/WhatsAppCampaign";
+import DatasetUpload from "./components/DatasetUpload";
+import SystemStatusPanel from "./components/SystemStatusPanel";
 
 export default function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -14,6 +16,7 @@ export default function App() {
   });
   
   const [currentView, setCurrentView] = useState("intelligence");
+  const [datasetProfile, setDatasetProfile] = useState(null);
 
   const openModal = (tab) => {
     setActiveTab(tab);
@@ -94,13 +97,15 @@ export default function App() {
           <div className="relative z-10">
             {currentView === "intelligence" ? (
               <div className="flex flex-col gap-6">
-                <StatsRow />
+                <SystemStatusPanel />
+                <DatasetUpload onScored={(result) => setDatasetProfile(result)} />
+                <StatsRow datasetProfile={datasetProfile} />
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <ChurnChart />
-                  <RFMMap />
-                  <HighRiskTable />
-                  <SegmentBreakdown />
+                  <ChurnChart datasetProfile={datasetProfile} />
+                  <RFMMap datasetProfile={datasetProfile} />
+                  <HighRiskTable datasetProfile={datasetProfile} />
+                  <SegmentBreakdown datasetProfile={datasetProfile} />
                 </div>
               </div>
             ) : (

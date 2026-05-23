@@ -18,6 +18,29 @@ export function getSegments() {
   return request("/segments");
 }
 
+// Datasets / Inference
+export async function scoreDatasetDirect(file) {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const res = await fetch(`${API_BASE}/datasets/score-direct`, {
+    method: "POST",
+    body: formData,
+  });
+
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || `Request failed: ${res.status}`);
+  return data;
+}
+
+export function getDatasetProfile(datasetId) {
+  return request(`/datasets/${datasetId}/profile`);
+}
+
+export function getSystemStatus() {
+  return request("/system/status");
+}
+
 export function getSegmentPreview(segmentId, limit = 10) {
   return request(`/segments/${segmentId}/preview?limit=${limit}`);
 }

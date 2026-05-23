@@ -71,7 +71,7 @@ export default function WhatsAppCampaign() {
   const [testNumber, setTestNumber] = useState("");
   const [ctaLink, setCtaLink] = useState("Balas INFO untuk dibantu admin");
   const [isGenerating, setIsGenerating] = useState(false);
-  const [promoDetails, setPromoDetails] = useState("");
+  const [promoDetails] = useState("");
   const [loading, setLoading] = useState(true);
   const [notice, setNotice] = useState("");
   const [error, setError] = useState("");
