@@ -1,42 +1,64 @@
 import { Users, TrendingDown, Layers, Megaphone, ArrowUpRight, ArrowDownRight } from "lucide-react";
 
-const stats = [
-  {
-    label: "Total Customers",
-    value: "5,120",
-    change: "+12.4%",
-    trend: "up",
-    icon: Users,
-    variant: "color1",
-  },
-  {
-    label: "Predicted Churn Rate",
-    value: "12.5%",
-    sub: "30-day average",
-    change: "+2.1%",
-    trend: "up",
-    icon: TrendingDown,
-    variant: "color2",
-  },
-  {
-    label: "RFM Segments",
-    value: "Champions",
-    sub: "310 customers",
-    change: "Top tier",
-    trend: "up",
-    icon: Layers,
-    variant: "color3",
-  },
-  {
-    label: "Active Campaigns",
-    value: "8",
-    sub: "AI-generated",
-    change: "+3 this week",
-    trend: "up",
-    icon: Megaphone,
-    variant: "color4",
-  },
-];
+function formatNumber(value) {
+  return new Intl.NumberFormat("en-US").format(value || 0);
+}
+
+function formatPct(value) {
+  if (value === undefined || value === null || Number.isNaN(Number(value))) return null;
+  return `${Number(value).toFixed(1)}%`;
+}
+
+function buildStats(datasetProfile) {
+  const profile = datasetProfile?.profile;
+  const total = datasetProfile?.customerCount || profile?.n_customers || 0;
+  const churnCounts = datasetProfile?.summary?.churnCounts;
+  const cltvCounts = datasetProfile?.summary?.cltvCounts;
+  const churnHigh = churnCounts
+    ? (((churnCounts.high || 0) + (churnCounts.critical || 0)) / Math.max(total, 1)) * 100
+    : profile?.churn_distribution?.high ?? profile?.churn_high_pct;
+  const cltvHigh = cltvCounts
+    ? ((cltvCounts.A || 0) / Math.max(total, 1)) * 100
+    : profile?.cltv_distribution?.high ?? profile?.cltv_high_pct;
+
+  return [
+    {
+      label: "Total Customers",
+      value: datasetProfile ? formatNumber(datasetProfile.customerCount) : "5,120",
+      change: datasetProfile ? "Uploaded" : "+12.4%",
+      trend: "up",
+      icon: Users,
+      variant: "color1",
+    },
+    {
+      label: "Predicted Churn Rate",
+      value: formatPct(churnHigh) || "12.5%",
+      sub: datasetProfile ? "High-risk customers" : "30-day average",
+      change: datasetProfile ? "Profiled" : "+2.1%",
+      trend: "up",
+      icon: TrendingDown,
+      variant: "color2",
+    },
+    {
+      label: "CLTV Profile",
+      value: formatPct(cltvHigh) || "Champions",
+      sub: datasetProfile ? "High-value customers" : "310 customers",
+      change: datasetProfile ? "Calibrated" : "Top tier",
+      trend: "up",
+      icon: Layers,
+      variant: "color3",
+    },
+    {
+      label: "Active Campaigns",
+      value: "8",
+      sub: "AI-generated",
+      change: "+3 this week",
+      trend: "up",
+      icon: Megaphone,
+      variant: "color4",
+    },
+  ];
+}
 
 const variantStyles = {
   color1: "bg-gradient-to-br from-[#FFD13B] to-[#FFA951] text-[#1C1D36]",
@@ -45,7 +67,9 @@ const variantStyles = {
   color4: "bg-gradient-to-br from-[#FCEFB4] to-[#FFF394] text-[#1C1D36]",
 };
 
-export default function StatsRow() {
+export default function StatsRow({ datasetProfile }) {
+  const stats = buildStats(datasetProfile);
+
   return (
     <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
       {stats.map((stat) => {

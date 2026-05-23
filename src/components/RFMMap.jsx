@@ -1,15 +1,44 @@
 import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ZAxis, Cell } from "recharts";
 
-const segments = [
-//   { name: "Champions", recency: 85, frequency: 90, monetary: 320, color: "#FFD13B", count: 310 }, 
-  { name: "Loyal", recency: 70, frequency: 75, monetary: 220, color: "#B7D9B1", count: 845 }, 
-//   { name: "Promising", recency: 55, frequency: 40, monetary: 130, color: "#3B82F6", count: 612 }, 
-  { name: "At Risk", recency: 25, frequency: 60, monetary: 200, color: "#FEACCC", count: 478 }, 
-  { name: "Hibernating", recency: 15, frequency: 20, monetary: 90, color: "#B4D0FB", count: 392 }, 
-//   { name: "New", recency: 80, frequency: 15, monetary: 70, color: "#A855F7", count: 234 },
+const fallbackSegments = [
+  { name: "High Value", recency: 85, frequency: 90, monetary: 320, color: "#FFD13B", count: 310 },
+  { name: "At Risk", recency: 25, frequency: 60, monetary: 200, color: "#FEACCC", count: 478 },
+  { name: "Hibernating", recency: 15, frequency: 20, monetary: 90, color: "#B4D0FB", count: 392 },
+  { name: "New/Occasional", recency: 70, frequency: 20, monetary: 90, color: "#B7D9B1", count: 234 },
 ];
 
-export default function RFMMap() {
+const colors = {
+  "High Value": "#FFD13B",
+  "At Risk": "#FEACCC",
+  Hibernating: "#B4D0FB",
+  "New/Occasional": "#B7D9B1",
+  "New / Occasional": "#B7D9B1",
+};
+
+function buildSegments(datasetProfile) {
+  const customers = datasetProfile?.customers;
+  if (!customers?.length) return fallbackSegments;
+
+  const grouped = customers.reduce((acc, c) => {
+    const name = c.kmeansSegment || "Unknown";
+    if (!acc[name]) acc[name] = { name, recency: 0, frequency: 0, monetary: 0, count: 0, color: colors[name] || "#CBD5E1" };
+    acc[name].recency += Number(c.recency || 0);
+    acc[name].frequency += Number(c.frequency || 0);
+    acc[name].monetary += Number(c.monetary || 0);
+    acc[name].count += 1;
+    return acc;
+  }, {});
+
+  return Object.values(grouped).map((s) => ({
+    ...s,
+    recency: Math.round(s.recency / s.count),
+    frequency: Number((s.frequency / s.count).toFixed(1)),
+    monetary: Number((s.monetary / s.count).toFixed(1)),
+  }));
+}
+
+export default function RFMMap({ datasetProfile }) {
+  const segments = buildSegments(datasetProfile);
   return (
     <div className="bg-white/70 backdrop-blur-md rounded-[32px] p-6 border border-white shadow-sm h-full flex flex-col">
       
@@ -17,7 +46,7 @@ export default function RFMMap() {
       <div className="flex items-start justify-between mb-4">
         <div>
           <h3 className="font-semibold text-lg text-[#1C1D36]">RFM Analysis Map</h3>
-          <p className="text-xs text-slate-500 mt-1">Recency vs Frequency · bubble = monetary</p>
+          <p className="text-xs text-slate-500 mt-1">{datasetProfile ? "Averages from uploaded dataset" : "Recency vs Frequency · bubble = monetary"}</p>
         </div>
       </div>
 

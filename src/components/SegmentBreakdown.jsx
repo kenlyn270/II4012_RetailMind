@@ -1,15 +1,45 @@
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Cell, Tooltip } from "recharts";
 
-const data = [
-//   { name: "Champions", value: 310, color: "#FFD13B" },
-  { name: "Loyal", value: 845, color: "#B7D9B1" },
-//   { name: "Promising", value: 612, color: "#3B82F6" },
+const fallbackData = [
+  { name: "High Value", value: 310, color: "#FFD13B" },
   { name: "At Risk", value: 478, color: "#FEACCC" },
   { name: "Hibernating", value: 392, color: "#B4D0FB" },
-//   { name: "New", value: 234, color: "#A855F7" },
+  { name: "New/Occasional", value: 234, color: "#B7D9B1" },
 ];
 
-export default function SegmentBreakdown() {
+const colors = {
+  "High Value": "#FFD13B",
+  "At Risk": "#FEACCC",
+  Hibernating: "#B4D0FB",
+  "New/Occasional": "#B7D9B1",
+  "New / Occasional": "#B7D9B1",
+};
+
+function buildData(datasetProfile) {
+  const counts = datasetProfile?.summary?.segmentCounts;
+  if (counts && Object.keys(counts).length) {
+    return Object.entries(counts).map(([name, value]) => ({
+      name,
+      value: Number(value),
+      color: colors[name] || "#CBD5E1",
+    }));
+  }
+
+  const dist = datasetProfile?.profile?.cluster_distribution;
+  if (dist && Object.keys(dist).length) {
+    const total = datasetProfile?.customerCount || datasetProfile?.profile?.n_customers || 0;
+    return Object.entries(dist).map(([name, pct]) => ({
+      name,
+      value: Math.round(Number(pct) * total),
+      color: colors[name] || "#CBD5E1",
+    }));
+  }
+
+  return fallbackData;
+}
+
+export default function SegmentBreakdown({ datasetProfile }) {
+  const data = buildData(datasetProfile);
   const total = data.reduce((s, d) => s + d.value, 0);
   
   return (
@@ -20,7 +50,7 @@ export default function SegmentBreakdown() {
         <div>
           <h3 className="font-semibold text-lg text-[#1C1D36]">RFM Segment Breakdown</h3>
           <p className="text-xs text-slate-500 mt-1">
-            Customers per segment · <span className="font-bold text-[#1C1D36]">{total.toLocaleString()}</span> total
+            {datasetProfile ? "Uploaded dataset" : "Demo baseline"} · <span className="font-bold text-[#1C1D36]">{total.toLocaleString()}</span> total
           </p>
         </div>
       </div>

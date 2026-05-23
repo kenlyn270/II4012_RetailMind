@@ -1,20 +1,42 @@
 
 
-const customers = [
-  { id: "C-1024", name: "Aisha Rahmawati", risk: 92.3, segment: "At Risk", last: "Sep 3, 2025", value: "$1,240" },
-  { id: "C-1018", name: "Budi Santoso", risk: 90.0, segment: "At Risk", last: "Sep 9, 2025", value: "$980" },
-  { id: "C-1041", name: "Citra Lestari", risk: 85.0, segment: "Hibernating", last: "Sep 6, 2025", value: "$720" },
-  { id: "C-1063", name: "Dimas Pratama", risk: 78.4, segment: "At Risk", last: "Aug 28, 2025", value: "$1,560" },
-  { id: "C-1077", name: "Eka Putri", risk: 74.5, segment: "Hibernating", last: "Jan 25, 2026", value: "$430" },
+const fallbackCustomers = [
+  { id: "C-1024", name: "Aisha Rahmawati", risk: 92.3, level: "CRITICAL", segment: "At Risk", last: "Sep 3, 2025", value: "$1,240" },
+  { id: "C-1018", name: "Budi Santoso", risk: 90.0, level: "CRITICAL", segment: "At Risk", last: "Sep 9, 2025", value: "$980" },
+  { id: "C-1041", name: "Citra Lestari", risk: 85.0, level: "CRITICAL", segment: "Hibernating", last: "Sep 6, 2025", value: "$720" },
+  { id: "C-1063", name: "Dimas Pratama", risk: 78.4, level: "CRITICAL", segment: "At Risk", last: "Aug 28, 2025", value: "$1,560" },
+  { id: "C-1077", name: "Eka Putri", risk: 74.5, level: "HIGH", segment: "Hibernating", last: "Jan 25, 2026", value: "$430" },
 ];
 
 const segmentColors = {
   "At Risk": "bg-red-100 text-red-600",
   "Hibernating": "bg-slate-200 text-slate-600",
-  "Loyal": "bg-amber-100 text-amber-700",
+  "High Value": "bg-amber-100 text-amber-700",
+  "New/Occasional": "bg-emerald-100 text-emerald-700",
 };
 
-export default function HighRiskTable() {
+function money(value) {
+  return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(Number(value || 0));
+}
+
+function buildCustomers(datasetProfile) {
+  if (!datasetProfile?.customers?.length) return fallbackCustomers;
+  return [...datasetProfile.customers]
+    .sort((a, b) => Number(b.churnRiskScore || 0) - Number(a.churnRiskScore || 0))
+    .slice(0, 5)
+    .map((c) => ({
+      id: c.customerId,
+      name: `Customer ${c.customerId}`,
+      risk: Number(c.churnRiskScore || 0).toFixed(1),
+      level: c.churnRiskLevel,
+      segment: c.kmeansSegment,
+      last: `${c.recency} days ago`,
+      value: money(c.monetary),
+    }));
+}
+
+export default function HighRiskTable({ datasetProfile }) {
+  const customers = buildCustomers(datasetProfile);
   return (
     <div className="bg-white/70 backdrop-blur-md rounded-[32px] p-6 border border-white shadow-sm h-full flex flex-col">
       
@@ -26,7 +48,7 @@ export default function HighRiskTable() {
           {/* </div> */}
           <div>
             <h3 className="font-bold text-lg text-[#1C1D36]">High-Risk Customers</h3>
-            <p className="text-xs text-slate-500">Top 5 to churn this month</p>
+            <p className="text-xs text-slate-500">{datasetProfile ? "Top 5 from uploaded dataset" : "Top 5 to churn this month"}</p>
           </div>
         </div>
         <button className="text-xs font-bold px-4 py-2 rounded-full bg-slate-100 text-[#1C1D36] hover:bg-slate-200 transition">
@@ -57,7 +79,7 @@ export default function HighRiskTable() {
               <div className="min-w-0">
                 <p className="font-bold text-sm text-[#1C1D36] truncate">{c.name}</p>
                 <p className="text-[10px] font-semibold text-slate-400">
-                  {c.id} · <span className="text-emerald-500">{c.value}</span>
+                  {c.id} · <span className="text-emerald-500">{c.value}</span> · {c.level || "-"}
                 </p>
               </div>
             </div>
@@ -74,7 +96,7 @@ export default function HighRiskTable() {
             
             {/* Info Segment */}
             <div className="col-span-3">
-              <span className={`text-[10px] font-bold px-3 py-1.5 rounded-full ${segmentColors[c.segment]}`}>
+              <span className={`text-[10px] font-bold px-3 py-1.5 rounded-full ${segmentColors[c.segment] || "bg-slate-100 text-slate-600"}`}>
                 {c.segment}
               </span>
             </div>
