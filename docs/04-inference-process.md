@@ -99,7 +99,9 @@ RFM juga dapat diberi score quintile 1–5 untuk rule-based segment seperti Cham
 - Output model diubah menjadi skor 0–100.
 - Interpretasi: skor lebih tinggi = risiko churn lebih tinggi.
 
-Peringatan penting: churn risk ini adalah proxy unsupervised, bukan label churn ground truth. Jangan melatih supervised model langsung menggunakan pseudo-label ini tanpa backtesting/feedback aktual.
+Peringatan penting: churn risk ini adalah proxy unsupervised, bukan label churn ground truth. Jangan melatih supervi
+￼
+sed model langsung menggunakan pseudo-label ini tanpa backtesting/feedback aktual.
 
 ## K-Means Segmentation
 
