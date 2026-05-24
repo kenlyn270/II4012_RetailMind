@@ -38,14 +38,14 @@ WhatsApp/Fonnte Webhook dan Channel Distribusi
 
 | Path | Fungsi |
 | --- | --- |
-| `src/` | Source frontend React/Vite. |
-| `src/components/` | Komponen dashboard dan campaign UI. |
-| `src/api.js` | Client API frontend ke server. |
-| `server/src/` | Backend Express API, routes, worker, dan integrasi webhook. |
-| `server/data/retailmind.db` | SQLite database lokal. |
-| `backend/data/` | Dataset mentah dan hasil enrichment ML. |
-| `backend/model/` | Artifact model ML serialized (`joblib`). |
-| `backend/modelling/` | Notebook eksperimen/training ML. |
+| `frontend/src/` | Source frontend React/Vite. |
+| `frontend/frontend/src/components/` | Komponen dashboard dan campaign UI. |
+| `frontend/frontend/src/api.js` | Client API frontend ke server. |
+| `backend/frontend/src/` | Backend Express API, routes, worker, dan integrasi webhook. |
+| `backend/data/retailmind.db` | SQLite database lokal. |
+| `model/data/` | Dataset mentah dan hasil enrichment ML. |
+| `model/model/` | Artifact model ML serialized (`joblib`). |
+| `model/modelling/` | Notebook eksperimen/training ML. |
 | `docs/` | Dokumentasi terorkestrasi untuk manusia dan AI agent. |
 | `backend/docs/` | Dokumentasi pipeline ML legacy/duplikat historis. |
 
@@ -129,7 +129,7 @@ Alur campaign WhatsApp:
 
 1. User memilih segment/target di dashboard.
 2. Sistem generate atau memakai copy campaign.
-3. Campaign disimpan di server/database.
+3. Campaign disimpan di backend/database.
 4. Worker mengirim pesan secara bertahap jika broadcast aktif.
 5. Webhook Fonnte menerima status delivery/reply.
 6. Status digunakan untuk monitoring dan feedback loop.
@@ -139,9 +139,9 @@ Alur campaign WhatsApp:
 Saat AI agent mengerjakan repository ini:
 
 1. Mulai dari `docs/README.md` dan dokumen ini.
-2. Untuk tugas UI, baca `src/App.jsx`, `src/components/`, dan `src/api.js`.
-3. Untuk tugas API/campaign/webhook, baca `server/src/index.js` dan route terkait di `server/src/routes/`.
-4. Untuk tugas ML/data, baca `docs/pipeline_documentation.md`, `backend/docs/pipeline_documentation.md`, dan notebook di `backend/modelling/`.
+2. Untuk tugas UI, baca `frontend/frontend/src/App.jsx`, `frontend/frontend/src/components/`, dan `frontend/frontend/src/api.js`.
+3. Untuk tugas API/campaign/webhook, baca `backend/frontend/src/index.js` dan route terkait di `backend/frontend/src/routes/`.
+4. Untuk tugas ML/data, baca `docs/pipeline_documentation.md`, `backend/docs/pipeline_documentation.md`, dan notebook di `model/modelling/`.
 5. Jangan mengubah dataset/model artifact besar kecuali diminta eksplisit.
 6. Jangan commit `.env`, database lokal, credential, token Fonnte, atau Gemini API key.
 7. Pertahankan gaya UI Tailwind yang sudah ada.

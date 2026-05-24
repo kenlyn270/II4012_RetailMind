@@ -28,13 +28,13 @@
 ```
 ┌─────────────────────────────────────────────────────────┐
 │  Frontend (React + Vite)                                │
-│  src/components/WhatsAppCampaign.jsx                    │
-│  src/api.js                                             │
+│  frontend/frontend/src/components/WhatsAppCampaign.jsx                    │
+│  frontend/frontend/src/api.js                                             │
 └────────────────────┬────────────────────────────────────┘
                      │ /api proxy (vite → localhost:3001)
 ┌────────────────────▼────────────────────────────────────┐
 │  Backend (Express)                                      │
-│  server/src/index.js                                    │
+│  backend/frontend/src/index.js                                    │
 │                                                         │
 │  Routes:                                                │
 │    /api/segments         → segmentService.js            │
@@ -52,7 +52,7 @@
                      │
 ┌────────────────────▼────────────────────────────────────┐
 │  SQLite (better-sqlite3)                                │
-│  server/data/retailmind.db                              │
+│  backend/data/retailmind.db                              │
 │                                                         │
 │  Tables:                                                │
 │    customer_segments     (5.878 rows)                   │
@@ -139,7 +139,7 @@
 
 ## 5. Fitur Frontend Yang Sudah Jalan
 
-### WhatsApp Campaign Page (`src/components/WhatsAppCampaign.jsx`)
+### WhatsApp Campaign Page (`frontend/frontend/src/components/WhatsAppCampaign.jsx`)
 
 **Step 1 — Select Segment**
 - Load segment dari API real
@@ -198,7 +198,7 @@
 **Status:** Template statis di frontend. Belum ada integrasi LLM.
 
 **Yang perlu dibuat:**
-- `server/src/services/copywriterService.js` — panggil Gemini API
+- `backend/frontend/src/services/copywriterService.js` — panggil Gemini API
 - Route `POST /api/campaigns/:id/generate` — generate pesan per segment
 - Prompt template sesuai plan section 10 (konteks segment: avg churn risk, avg recency, avg CLTV, recommended action)
 - Personalization token: `{name}`, `{last_purchase_days}`, `{cta_link}`
@@ -250,13 +250,13 @@ GEMINI_API_KEY=<key>
 ## 9. File Structure
 
 ```
-server/
+backend/
 ├── .env                          # Environment variables
 ├── .env.example
 ├── package.json
 ├── data/
 │   └── retailmind.db            # SQLite database
-└── src/
+└── frontend/src/
     ├── index.js                  # Express app entry
     ├── db/
     │   ├── database.js           # Schema + init
@@ -272,7 +272,7 @@ server/
     └── workers/
         └── dispatchWorker.js     # Polling dispatch worker
 
-src/
+frontend/src/
 ├── api.js                        # Frontend API client
 ├── App.jsx                       # Main app with campaign tab
 ├── main.jsx
@@ -306,7 +306,7 @@ npm run dev
 # → http://localhost:5173 (proxy /api → 3001)
 ```
 
-### Environment Variables (server/.env)
+### Environment Variables (backend/.env)
 
 ```bash
 # Fonnte (kosongkan untuk dry-run)

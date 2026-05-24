@@ -54,7 +54,7 @@ During development and testing of the serialization assets, we discovered a **cr
 > Because the same variable was serialized, the saved scaler expects **log-transformed inputs**, meaning that passing raw inputs to the Isolation Forest model using the saved scaler will result in highly distorted risk scores.
 
 ### How We Mitigated This (Quick Wins Inference Layer)
-In `backend/modelling/test_inference.py`, we implement a robust, hybrid scaling layer:
+In `model/modelling/test_inference.py`, we implement a robust, hybrid scaling layer:
 1. **For K-Means Segmentation:** We apply `np.log(X + 1)` and then scale using the saved log `scaler`. This yields a **100% match** with the original cluster allocations.
 2. **For Isolation Forest (Churn Risk):** We dynamically reconstruct a raw `StandardScaler` using the exact population means and variances computed from the original dataset:
    - **Recency Mean/Scale:** `201.33` / `209.32`
@@ -71,19 +71,19 @@ All scripts are configured to use the `basicneeds` conda environment where the d
 ### Step 1: Generate the Test Datasets
 To generate the raw transaction and RFM dummy tables:
 ```bash
-/home/ikhbar/miniconda3/envs/basicneeds/bin/python backend/modelling/generate_dummy_data.py
+/home/ikhbar/miniconda3/envs/basicneeds/bin/python model/modelling/generate_dummy_data.py
 ```
 *Outputs generated:*
-- `backend/data/dummy_rfm_customers.csv`
-- `backend/data/dummy_clean_transactions.csv`
+- `model/data/dummy_rfm_customers.csv`
+- `model/data/dummy_clean_transactions.csv`
 
 ### Step 2: Execute Inference Pipeline & Score Customers
 To load the serialized models, apply hybrid scaling, compute predictions, tier CLTV, generate recommended actions, and build human-readable explanations:
 ```bash
-/home/ikhbar/miniconda3/envs/basicneeds/bin/python backend/modelling/test_inference.py
+/home/ikhbar/miniconda3/envs/basicneeds/bin/python model/modelling/test_inference.py
 ```
 *Outputs generated:*
-- `backend/data/dummy_enriched_customer_analytics.csv` (complete scored profiles)
+- `model/data/dummy_enriched_customer_analytics.csv` (complete scored profiles)
 - A detailed terminal-based validation report showing the first 5 records with complete explanations.
 
 ---
@@ -104,4 +104,4 @@ Customer ID: 20001
 └── explanation: "Customer categorized as 'New/Occasional' with Churn Risk level: LOW (3.2/100) and CLTV Tier: B. Key drivers: Very recent interaction (37 days ago). Action: Loyalty Maintenance."
 ```
 
-By inspecting `backend/data/dummy_enriched_customer_analytics.csv`, you can review the generated kopian for all 100 test customers.
+By inspecting `model/data/dummy_enriched_customer_analytics.csv`, you can review the generated kopian for all 100 test customers.

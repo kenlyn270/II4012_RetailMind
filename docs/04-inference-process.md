@@ -3,16 +3,16 @@
 ## Lokasi Kode dan Artifact
 
 ```text
-backend/inference/app.py          FastAPI service
-backend/inference/rfm.py          Agregasi transaksi ke RFM
-backend/inference/predictor.py    Load model dan scoring
-backend/inference/calibration.py  Dataset profile dan tier calibration
-backend/inference/recommendations.py RecommendedAction + explanation
-backend/inference/schemas.py      Request/response schema
-backend/model/retail_ai_model_assets.joblib
-backend/model/MODEL_CARD.md
-backend/modelling/                Notebook/script training/testing
-backend/data/                     CSV raw, processed, dummy
+model/inference/app.py          FastAPI service
+model/inference/rfm.py          Agregasi transaksi ke RFM
+model/inference/predictor.py    Load model dan scoring
+model/inference/calibration.py  Dataset profile dan tier calibration
+model/inference/recommendations.py RecommendedAction + explanation
+model/inference/schemas.py      Request/response schema
+model/model/retail_ai_model_assets.joblib
+model/model/MODEL_CARD.md
+model/modelling/                Notebook/script training/testing
+model/data/                     CSV raw, processed, dummy
 ```
 
 ## Model Suite
@@ -28,7 +28,7 @@ RetailMind memakai bundle model `joblib`:
 | `cltv_bgf_params` | `BetaGeoFitter` | Prediksi frekuensi transaksi. |
 | `cltv_ggf_params` | `GammaGammaFitter` | Prediksi monetary value/CLTV. |
 
-Model card baseline saat ini: `backend/model/MODEL_CARD.md`, versi 2.0.0.
+Model card baseline saat ini: `model/model/MODEL_CARD.md`, versi 2.0.0.
 
 ## Endpoint Inference
 
@@ -136,15 +136,15 @@ Lalu setiap customer diberi:
 Generator dummy data tersedia untuk validasi tanpa dataset besar/sensitif:
 
 ```bash
-/home/ikhbar/miniconda3/envs/basicneeds/bin/python backend/modelling/generate_dummy_data.py
-/home/ikhbar/miniconda3/envs/basicneeds/bin/python backend/modelling/test_inference.py
+/home/ikhbar/miniconda3/envs/basicneeds/bin/python model/modelling/generate_dummy_data.py
+/home/ikhbar/miniconda3/envs/basicneeds/bin/python model/modelling/test_inference.py
 ```
 
 Output contoh:
 
-- `backend/data/dummy_rfm_customers.csv`
-- `backend/data/dummy_clean_transactions.csv`
-- `backend/data/dummy_enriched_customer_analytics.csv`
+- `model/data/dummy_rfm_customers.csv`
+- `model/data/dummy_clean_transactions.csv`
+- `model/data/dummy_enriched_customer_analytics.csv`
 
 Persona synthetic mencakup Champions, At Risk, New, Hibernating, dan Normal.
 

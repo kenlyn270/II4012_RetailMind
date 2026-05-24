@@ -11,7 +11,7 @@ Sumber konteks utama:
 - `docs/PLAN.md`: campaign engine dan distribusi multi-channel.
 - `docs/wa.md`: rancangan WA broadcast, campaign manager, dispatch worker, dan Fonnte.
 - `docs/pipeline_documentation.md`: RFM, churn risk, K-Means segment, CLTV, dan recommended action.
-- `backend/data/enriched_customer_analytics.csv`: output segmentasi dan scoring pelanggan.
+- `model/data/enriched_customer_analytics.csv`: output segmentasi dan scoring pelanggan.
 
 Catatan penting: dataset demo saat ini belum memiliki nomor WhatsApp. Sebelum blast nyata, sistem harus menambahkan contact enrichment table yang berisi nomor, status opt-in, dan blacklist.
 
@@ -34,7 +34,7 @@ Catatan penting: dataset demo saat ini belum memiliki nomor WhatsApp. Sebelum bl
 
 ## 3. Data Segmentasi RetailMind
 
-File `backend/data/enriched_customer_analytics.csv` berisi kolom utama:
+File `model/data/enriched_customer_analytics.csv` berisi kolom utama:
 
 | Kolom | Fungsi Untuk WhatsApp Campaign |
 | --- | --- |

@@ -29,21 +29,21 @@ RetailMind adalah platform customer intelligence dan campaign distribution untuk
 ## Peta Komponen
 
 ```text
-Frontend React/Vite (src/)
+Frontend React/Vite (frontend/src/)
   ↓ /api
-Backend Express (server/src/)
+Backend Express (backend/src/)
   ├─ Campaign, segment, dataset, system API
   ├─ SQLite database
   ├─ Fonnte service + webhook
   └─ Dispatch worker
   ↓ HTTP/process call
-Inference FastAPI/Python (backend/inference/)
+Inference FastAPI/Python (model/inference/)
   ├─ RFM aggregation
   ├─ Predictor loading joblib model
   ├─ Dataset calibration
   └─ Recommendation/explanation
   ↓
-Model/data assets (backend/model, backend/data)
+Model/data assets (model/model, model/data)
 ```
 
 ## Aturan Dokumentasi ke Depan

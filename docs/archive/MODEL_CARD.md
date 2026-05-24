@@ -41,4 +41,4 @@ Model ini adalah bundle aset `joblib` yang berisi beberapa komponen:
 *   **v2.0.0:** Fix scaler bug. Ditambahkan `raw_scaler` dan `log_scaler` secara eksplisit. Ditambahkan metadata versi dan feature stats.
 
 ## 6. Penggunaan (Inference)
-Gunakan `backend/inference/predictor.py` untuk memuat aset ini. Jangan melakukan fit ulang (*retrain*) pada model ini di jalur distribusi aplikasi.
+Gunakan `model/inference/predictor.py` untuk memuat aset ini. Jangan melakukan fit ulang (*retrain*) pada model ini di jalur distribusi aplikasi.

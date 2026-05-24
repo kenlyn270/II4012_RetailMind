@@ -10,7 +10,7 @@
 User meminta dua dokumen planning:
 
 1. `PLANREFACTOR.md` — rencana migrasi backend database ke PostgreSQL.
-2. `INFERENCE.md` — rencana implementasi model dari `backend/model/` dan `backend/modelling/`.
+2. `INFERENCE.md` — rencana implementasi model dari `model/model/` dan `model/modelling/`.
 
 Setelah diskusi, scope berkembang menjadi:
 
@@ -29,7 +29,7 @@ Dibuat di root repo.
 
 Isi utama:
 
-- Audit database sekarang: SQLite via `better-sqlite3` di `server/src/db/database.js`.
+- Audit database sekarang: SQLite via `better-sqlite3` di `backend/frontend/src/db/database.js`.
 - Target PostgreSQL:
   - `UUID`
   - `JSONB`
@@ -51,7 +51,7 @@ Awalnya dibuat dengan pendekatan inference service + kemungkinan retrain. Setela
 Keputusan utama versi akhir:
 
 - **Tidak retrain model tiap upload.**
-- Baseline model di `backend/model/retail_ai_model_assets.joblib` dianggap frozen/read-only.
+- Baseline model di `model/model/retail_ai_model_assets.joblib` dianggap frozen/read-only.
 - User journey target:
 
 ```txt
@@ -64,11 +64,11 @@ User upload clean_transactions.csv
 
 Komponen inference yang direncanakan:
 
-- `backend/inference/rfm.py`
-- `backend/inference/predictor.py`
-- `backend/inference/calibration.py`
-- `backend/inference/recommendations.py`
-- `backend/inference/app.py`
+- `model/inference/rfm.py`
+- `model/inference/predictor.py`
+- `model/inference/calibration.py`
+- `model/inference/recommendations.py`
+- `model/inference/app.py`
 
 Endpoint yang direncanakan:
 
@@ -109,7 +109,7 @@ Alasan:
 
 Retrain tiap upload dianggap tidak efisien karena:
 
-- Dataset bisa kecil, misalnya `backend/data/dummy_clean_transactions.csv` hanya 451 transaksi / 30 customer.
+- Dataset bisa kecil, misalnya `model/data/dummy_clean_transactions.csv` hanya 451 transaksi / 30 customer.
 - KMeans k=4 dan BG-NBD tidak stabil untuk sample kecil.
 - Cluster label bisa drift.
 - Skor tidak comparable antar upload.
@@ -132,7 +132,7 @@ Yang berubah per upload bukan model, tapi:
 
 ### 4.1 Dependency
 
-Di `server/package.json`:
+Di `backend/package.json`:
 
 - `better-sqlite3` dihapus.
 - `pg` ditambahkan.
@@ -141,14 +141,14 @@ Di `server/package.json`:
 "pg": "^8.21.0"
 ```
 
-`server/package-lock.json` ikut berubah.
+`backend/package-lock.json` ikut berubah.
 
 ### 4.2 Database layer
 
 File utama yang direwrite:
 
 ```txt
-server/src/db/database.js
+backend/frontend/src/db/database.js
 ```
 
 Sekarang:
@@ -189,7 +189,7 @@ Dengan:
 Ditambahkan:
 
 ```txt
-server/src/db/migrations/0001_init_postgres.sql
+backend/frontend/src/db/migrations/0001_init_postgres.sql
 ```
 
 Isinya sama dengan schema di `initDatabase()`. Ini bisa dipakai manual via `psql` atau nanti diadaptasi ke migration runner.
@@ -199,7 +199,7 @@ Isinya sama dengan schema di `initDatabase()`. Ini bisa dipakai manual via `psql
 File direwrite:
 
 ```txt
-server/src/db/seed.js
+backend/frontend/src/db/seed.js
 ```
 
 Sekarang:
@@ -209,7 +209,7 @@ Sekarang:
 - Membaca:
 
 ```txt
-backend/data/enriched_customer_analytics.csv
+model/data/enriched_customer_analytics.csv
 ```
 
 - Upsert ke:
@@ -227,9 +227,9 @@ INSERT ... ON CONFLICT (...) DO UPDATE
 File yang diubah:
 
 ```txt
-server/src/services/segmentService.js
-server/src/services/campaignService.js
-server/src/services/copywriterService.js
+backend/frontend/src/services/segmentService.js
+backend/frontend/src/services/campaignService.js
+backend/frontend/src/services/copywriterService.js
 ```
 
 Perubahan utama:
@@ -246,9 +246,9 @@ Perubahan utama:
 File yang diubah:
 
 ```txt
-server/src/routes/campaigns.js
-server/src/routes/segments.js
-server/src/routes/webhooks.js
+backend/frontend/src/routes/campaigns.js
+backend/frontend/src/routes/segments.js
+backend/frontend/src/routes/webhooks.js
 ```
 
 Perubahan:
@@ -263,7 +263,7 @@ Perubahan:
 File yang diubah:
 
 ```txt
-server/src/workers/dispatchWorker.js
+backend/frontend/src/workers/dispatchWorker.js
 ```
 
 Perubahan:
@@ -283,7 +283,7 @@ Ini membuat worker aman kalau nanti ada lebih dari satu worker.
 File:
 
 ```txt
-server/src/index.js
+backend/frontend/src/index.js
 ```
 
 Perubahan:
@@ -299,7 +299,7 @@ Karena init database sekarang async.
 File:
 
 ```txt
-server/.env.example
+backend/.env.example
 ```
 
 Ditambahkan:
@@ -309,7 +309,7 @@ DATABASE_URL=postgres://retailmind:retailmind@localhost:5432/retailmind
 PG_POOL_MAX=10
 ```
 
-`server/.env` lokal juga ditambahkan nilai yang sama, tapi file itu ignored oleh git.
+`backend/.env` lokal juga ditambahkan nilai yang sama, tapi file itu ignored oleh git.
 
 ### 4.10 Docker Compose
 
@@ -336,7 +336,7 @@ Command yang dijalankan:
 
 ```bash
 cd server
-for f in src/index.js src/db/database.js src/db/seed.js src/routes/*.js src/services/*.js src/workers/*.js; do node --check "$f" || exit 1; done
+for f in frontend/src/index.js frontend/src/db/database.js frontend/src/db/seed.js frontend/src/routes/*.js frontend/src/services/*.js frontend/src/workers/*.js; do node --check "$f" || exit 1; done
 ```
 
 Hasil: berhasil, tidak ada syntax error.
@@ -346,10 +346,10 @@ Hasil: berhasil, tidak ada syntax error.
 Command:
 
 ```bash
-grep -R "better-sqlite3\|db\.prepare\|db\.transaction\|datetime('now')" -n server/src server/package.json --exclude-dir=node_modules
+grep -R "better-sqlite3\|db\.prepare\|db\.transaction\|datetime('now')" -n backend/src backend/package.json --exclude-dir=node_modules
 ```
 
-Hasil: tidak ada sisa referensi SQLite di source server/package.
+Hasil: tidak ada sisa referensi SQLite di source backend/package.
 
 ### 5.3 Belum bisa run integration full
 
@@ -407,9 +407,9 @@ curl -X POST http://localhost:3001/api/campaigns/demo-blast \
 Jika seed gagal, cek:
 
 - Postgres container hidup.
-- `server/.env` punya `DATABASE_URL`.
+- `backend/.env` punya `DATABASE_URL`.
 - Port 5432 tidak bentrok.
-- CSV `backend/data/enriched_customer_analytics.csv` tersedia.
+- CSV `model/data/enriched_customer_analytics.csv` tersedia.
 
 ---
 
@@ -418,19 +418,19 @@ Jika seed gagal, cek:
 Modified:
 
 ```txt
-server/.env.example
-server/package-lock.json
-server/package.json
-server/src/db/database.js
-server/src/db/seed.js
-server/src/index.js
-server/src/routes/campaigns.js
-server/src/routes/segments.js
-server/src/routes/webhooks.js
-server/src/services/campaignService.js
-server/src/services/copywriterService.js
-server/src/services/segmentService.js
-server/src/workers/dispatchWorker.js
+backend/.env.example
+backend/package-lock.json
+backend/package.json
+backend/frontend/src/db/database.js
+backend/frontend/src/db/seed.js
+backend/frontend/src/index.js
+backend/frontend/src/routes/campaigns.js
+backend/frontend/src/routes/segments.js
+backend/frontend/src/routes/webhooks.js
+backend/frontend/src/services/campaignService.js
+backend/frontend/src/services/copywriterService.js
+backend/frontend/src/services/segmentService.js
+backend/frontend/src/workers/dispatchWorker.js
 ```
 
 Untracked / added:
@@ -445,10 +445,10 @@ Juga ditambahkan:
 
 ```txt
 docker-compose.dev.yml
-server/src/db/migrations/0001_init_postgres.sql
+backend/frontend/src/db/migrations/0001_init_postgres.sql
 ```
 
-Catatan: `server/.env` diubah lokal untuk menambahkan `DATABASE_URL`, tapi ignored oleh `.gitignore`.
+Catatan: `backend/.env` diubah lokal untuk menambahkan `DATABASE_URL`, tapi ignored oleh `.gitignore`.
 
 ---
 
@@ -477,13 +477,13 @@ Lalu perbaiki kalau muncul error runtime SQL.
 
 ### 8.4 Migrate existing SQLite data belum dibuat
 
-Implementasi saat ini memprioritaskan clean PostgreSQL + seed dari CSV. Belum ada script `migrate-from-sqlite.js`. Kalau perlu preserve campaign history dari `server/data/retailmind.db`, buat script migrasi terpisah.
+Implementasi saat ini memprioritaskan clean PostgreSQL + seed dari CSV. Belum ada script `migrate-from-sqlite.js`. Kalau perlu preserve campaign history dari `backend/data/retailmind.db`, buat script migrasi terpisah.
 
 ### 8.5 Fase inference belum diimplementasi
 
 `INFERENCE.md` sudah siap sebagai rencana, tapi belum ada kode:
 
-- `backend/inference/`
+- `model/inference/`
 - FastAPI service
 - migration `0002_inference.sql`
 - endpoint upload dataset di Node.js
@@ -494,8 +494,8 @@ Saran urutan setelah PostgreSQL smoke test hijau:
    - `datasets`
    - `dataset_profiles`
    - `customer_segments.dataset_id`
-2. Buat skeleton `backend/inference/`.
-3. Implement `rfm.py` dan test terhadap `backend/data/dummy_clean_transactions.csv`.
+2. Buat skeleton `model/inference/`.
+3. Implement `rfm.py` dan test terhadap `model/data/dummy_clean_transactions.csv`.
 
 ---
 

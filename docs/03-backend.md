@@ -3,21 +3,21 @@
 ## Lokasi Kode
 
 ```text
-server/src/index.js                  Entry point Express
-server/src/routes/segments.js        Segment API
-server/src/routes/campaigns.js       Campaign API + demo blast
-server/src/routes/datasets.js        Dataset upload/scoring API
-server/src/routes/system.js          Health/system API
-server/src/routes/webhooks.js        Fonnte webhook API
-server/src/services/*.js             Business logic
-server/src/workers/dispatchWorker.js Worker pengiriman pesan
-server/src/db/database.js            SQLite init/helper
-server/src/db/migrations/            Skema database
+backend/src/index.js                  Entry point Express
+backend/src/routes/segments.js        Segment API
+backend/src/routes/campaigns.js       Campaign API + demo blast
+backend/src/routes/datasets.js        Dataset upload/scoring API
+backend/src/routes/system.js          Health/system API
+backend/src/routes/webhooks.js        Fonnte webhook API
+backend/src/services/*.js             Business logic
+backend/src/workers/dispatchWorker.js Worker pengiriman pesan
+backend/src/db/database.js            SQLite init/helper
+backend/src/db/migrations/            Skema database
 ```
 
 ## Entry Point
 
-`server/src/index.js` melakukan:
+`backend/src/index.js` melakukan:
 
 1. Load environment via `dotenv/config`.
 2. Setup Express + CORS + JSON body parser.
@@ -131,7 +131,7 @@ Jangan commit `.env`, token, database lokal runtime, atau credential.
 ## Menjalankan Backend
 
 ```bash
-cd server
+cd backend
 npm install
 npm run dev
 # atau

@@ -18,12 +18,12 @@ Baca berurutan:
 ## Struktur Penting
 
 ```text
-src/                 Frontend
-server/src/          Backend Express
-backend/inference/   FastAPI inference
-backend/model/       Model artifact
-backend/data/        Dataset
-backend/modelling/   Training/testing scripts
+frontend/src/                 Frontend
+backend/src/          Backend Express
+model/inference/   FastAPI inference
+model/model/       Model artifact
+model/data/        Dataset
+model/modelling/   Training/testing scripts
 docs/                Dokumentasi utama
 ```
 

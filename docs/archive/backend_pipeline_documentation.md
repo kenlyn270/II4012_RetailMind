@@ -306,7 +306,7 @@ final_df['CLTVSegment'] = final_df['CLTVSegment'].fillna('Unknown')
 
 All trained model objects and transformers are serialized via `joblib`:
 
-**File:** `backend/model/retail_ai_model_assets.joblib` (~1 MB)
+**File:** `model/model/retail_ai_model_assets.joblib` (~1 MB)
 
 Contents include:
 - `StandardScaler` (fitted on training RFM features)
@@ -688,13 +688,13 @@ Key principle: Each phase DEPENDS on data collected in the previous phase.
 
 | File | Location | Purpose |
 |------|----------|---------|
-| `online_retail_II.csv` | `backend/data/` | Raw dataset |
-| `clean_transactions.csv` | `backend/data/` | Cleaned transaction data |
-| `rfm_customer_table.csv` | `backend/data/` | RFM features per customer |
-| `enriched_customer_analytics.csv` | `backend/data/` | Final integrated output |
-| `retail_ai_model_assets.joblib` | `backend/model/` | Serialized model artifacts |
-| `minggu1_data_rfm_cohort.ipynb` | `backend/modelling/` | Week 1 training notebook |
-| `minggu2_model_cltv_ai.ipynb` | `backend/modelling/` | Week 2 training notebook |
+| `online_retail_II.csv` | `model/data/` | Raw dataset |
+| `clean_transactions.csv` | `model/data/` | Cleaned transaction data |
+| `rfm_customer_table.csv` | `model/data/` | RFM features per customer |
+| `enriched_customer_analytics.csv` | `model/data/` | Final integrated output |
+| `retail_ai_model_assets.joblib` | `model/model/` | Serialized model artifacts |
+| `minggu1_data_rfm_cohort.ipynb` | `model/modelling/` | Week 1 training notebook |
+| `minggu2_model_cltv_ai.ipynb` | `model/modelling/` | Week 2 training notebook |
 
 ### 6.2 Dependencies
 

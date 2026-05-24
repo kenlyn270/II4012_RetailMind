@@ -1,6 +1,6 @@
 # 🧠 INFERENCE — Plan Implementasi Model RetailMind
 
-> **Scope:** Strategi mengekspos model di `backend/model/retail_ai_model_assets.joblib` dan skrip di `backend/modelling/` sebagai **inference service** yang menerima dataset transaksi baru dari user, mengembalikan customer analytics yang diperkaya — **tanpa melatih ulang model di hot path**.
+> **Scope:** Strategi mengekspos model di `model/model/retail_ai_model_assets.joblib` dan skrip di `model/modelling/` sebagai **inference service** yang menerima dataset transaksi baru dari user, mengembalikan customer analytics yang diperkaya — **tanpa melatih ulang model di hot path**.
 > **Owner:** ML / Backend
 > **Status:** Draft v2 — revisi setelah keputusan arsitektur.
 > **Last updated:** 2026-05-23
@@ -40,15 +40,15 @@ Konsekuensi:
 
 | Path | Isi | Ukuran |
 |---|---|---|
-| `backend/model/retail_ai_model_assets.joblib` | Bundle joblib: `scaler`, `churn_model` (IsolationForest), `segmentation_model` (KMeans), `cltv_bgf_params`, `cltv_ggf_params`, `risk_score_params`, `metadata` | ~1 MB |
-| `backend/modelling/cltv_risk_model.ipynb` | Notebook training utama | ~1 MB |
-| `backend/modelling/rfm_cohort_analysis.ipynb` | Notebook EDA / cohort | ~388 KB |
-| `backend/modelling/test_inference.py` | Skrip ujicoba inference (loads joblib → score dummy CSV → output enriched CSV) | ~8 KB |
-| `backend/modelling/generate_dummy_data.py` | Generator data sintetis | ~7 KB |
-| `backend/data/clean_transactions.csv` | Transaksi bersih hasil training UCI Online Retail II (805K baris) | 75 MB |
-| `backend/data/dummy_clean_transactions.csv` | Transaksi sintetis untuk testing pipeline (451 baris, 30 customer) | 40 KB |
-| `backend/data/dummy_rfm_customers.csv` | RFM pre-computed sintetis (100 customer) — bypass aggregation | 4.5 KB |
-| `backend/data/enriched_customer_analytics.csv` | Output pre-computed yang di-seed ke SQLite | 850 KB |
+| `model/model/retail_ai_model_assets.joblib` | Bundle joblib: `scaler`, `churn_model` (IsolationForest), `segmentation_model` (KMeans), `cltv_bgf_params`, `cltv_ggf_params`, `risk_score_params`, `metadata` | ~1 MB |
+| `model/modelling/cltv_risk_model.ipynb` | Notebook training utama | ~1 MB |
+| `model/modelling/rfm_cohort_analysis.ipynb` | Notebook EDA / cohort | ~388 KB |
+| `model/modelling/test_inference.py` | Skrip ujicoba inference (loads joblib → score dummy CSV → output enriched CSV) | ~8 KB |
+| `model/modelling/generate_dummy_data.py` | Generator data sintetis | ~7 KB |
+| `model/data/clean_transactions.csv` | Transaksi bersih hasil training UCI Online Retail II (805K baris) | 75 MB |
+| `model/data/dummy_clean_transactions.csv` | Transaksi sintetis untuk testing pipeline (451 baris, 30 customer) | 40 KB |
+| `model/data/dummy_rfm_customers.csv` | RFM pre-computed sintetis (100 customer) — bypass aggregation | 4.5 KB |
+| `model/data/enriched_customer_analytics.csv` | Output pre-computed yang di-seed ke SQLite | 850 KB |
 
 ### 1.2 Bug scaler (harus diperbaiki sebelum service go-live)
 
@@ -78,7 +78,7 @@ Untuk setiap customer:
 | `RecommendedAction` | Rule-based | Win-back Priority / Loyalty Maintenance / Low-cost Automation / Onboarding Campaign / Standard Nurture |
 | `explanation` | Template **kontekstual** | Pakai stats dari dataset profile, bukan stats UCI |
 
-Skema ini selaras dengan tabel `customer_segments` di `server/src/db/database.js`. Itu jadi target persistensi yang natural.
+Skema ini selaras dengan tabel `customer_segments` di `backend/frontend/src/db/database.js`. Itu jadi target persistensi yang natural.
 
 ---
 
@@ -149,7 +149,7 @@ Service Python berdiri di port `:8000`, expose HTTP. Node.js panggil via `fetch`
 │   React Dashboard (5173)                                          │
 │        │ HTTP                                                      │
 │        ▼                                                           │
-│   Node.js API (server/, :3001)                                    │
+│   Node.js API (backend/, :3001)                                    │
 │        │                                                           │
 │        ├──► PostgreSQL (:5432)   (lihat PLANREFACTOR.md)          │
 │        │      ├─ customer_segments                                │
@@ -258,7 +258,7 @@ Edge case: customer dengan `Frequency=1` tetap di-keep (CLTV BG-NBD akan return 
 Refactor `test_inference.py` jadi class yang load sekali, predict berkali-kali. Threshold dan population stats **dilepas** dari class — disuplai dari luar (calibration profile).
 
 ```python
-# backend/inference/predictor.py
+# model/inference/predictor.py
 import joblib, numpy as np, pandas as pd
 from sklearn.preprocessing import StandardScaler
 from lifetimes import BetaGeoFitter, GammaGammaFitter
@@ -339,7 +339,7 @@ Penting: method `score()` mengembalikan churn_risk_score, cluster, dan cltv ment
 Setelah scoring mentah, hitung profile dataset.
 
 ```python
-# backend/inference/calibration.py
+# model/inference/calibration.py
 import numpy as np, pandas as pd
 from datetime import datetime, timezone
 
@@ -447,7 +447,7 @@ Beda kunci dari versi `test_inference.py`: stats reference dari **dataset user**
 ### 5.5 End-to-end flow di FastAPI
 
 ```python
-# backend/inference/app.py
+# model/inference/app.py
 @app.post("/score/from-transactions", response_model=ScoreResponse)
 def score_from_transactions(req: TransactionsRequest):
     df_tx = pd.DataFrame([t.model_dump() for t in req.transactions])
@@ -486,7 +486,7 @@ Endpoint kompanyon:
 ## 6. Schema Kontrak (Pydantic)
 
 ```python
-# backend/inference/schemas.py
+# model/inference/schemas.py
 from pydantic import BaseModel, Field
 from typing import List, Optional, Dict, Any
 from datetime import datetime
@@ -599,7 +599,7 @@ Catatan:
 - `customer_segments` tetap satu baris per `customer_id`. Kolom `dataset_id` mengikat baris ke dataset asalnya — kalau user upload dataset baru, baris diupdate dan `dataset_id` ikut berubah.
 - Profile disimpan terpisah dari `customer_segments` supaya bisa di-load ringan untuk frontend (tampilkan threshold di tooltip, dll).
 
-### 7.2 Node.js wrapper (`server/src/services/inferenceService.js`)
+### 7.2 Node.js wrapper (`backend/frontend/src/services/inferenceService.js`)
 
 ```js
 const INFERENCE_URL = process.env.INFERENCE_URL || "http://localhost:8000";
@@ -715,7 +715,7 @@ Langkah:
            "feature_scales": raw_scaler.scale_.tolist(),
            "cluster_labels": {0: "High Value", 1: "Hibernating", 2: "At Risk", 3: "New/Occasional"},
        },
-   }, "backend/model/retail_ai_model_assets.joblib")
+   }, "model/model/retail_ai_model_assets.joblib")
    ```
 5. Jalankan ulang `test_inference.py` → bandingkan output dengan baseline. Skor numerik harus persis sama (workaround sebelumnya memang merefleksikan mean/var asli).
 6. Hapus blok hardcoded `_resolve_raw_scaler` fallback di `predictor.py` setelah dua sprint stabil.
@@ -725,7 +725,7 @@ Langkah:
 | Aspek | Strategi |
 |---|---|
 | Model version | `metadata.version` di joblib. Service expose di `/health` dan menyimpannya di setiap `dataset_profile`. |
-| Filename | Pertahankan `retail_ai_model_assets.joblib` (path stabil). Snapshot historis di `backend/model/archive/v{X}_{YYYYMMDD}.joblib`. |
+| Filename | Pertahankan `retail_ai_model_assets.joblib` (path stabil). Snapshot historis di `model/model/archive/v{X}_{YYYYMMDD}.joblib`. |
 | Metadata stamp | Setiap row di `customer_segments` & `dataset_profiles` punya `model_version` — auditable. |
 
 ### 8.4 Kapan retrain offline boleh dilakukan
@@ -737,12 +737,12 @@ Retrain bukan reaksi atas upload user. Retrain dijadwalkan kalau:
 - **Feedback bisnis:** rekomendasi action konsisten salah > 20% (butuh ground truth dari konversi campaign — future work).
 - **Dataset training baru** (misalnya UCI 2026) tersedia dan stakeholder approve.
 
-Pelaksanaan via `backend/modelling/train_pipeline.py` (manual, di lingkungan training, bukan service):
+Pelaksanaan via `model/modelling/train_pipeline.py` (manual, di lingkungan training, bukan service):
 
 ```bash
 python -m backend.modelling.train_pipeline \
     --transactions data/clean_transactions_2026.csv \
-    --output backend/model/retail_ai_model_assets.joblib \
+    --output model/model/retail_ai_model_assets.joblib \
     --version 3.0.0
 ```
 
@@ -773,7 +773,7 @@ Validasi adalah **gate akses ke service Python**, bukan tugas service Python sen
 
 ## 10. Testing
 
-### 10.1 Python (`backend/inference/tests/`)
+### 10.1 Python (`model/inference/tests/`)
 
 | Test | Cakupan |
 |---|---|
@@ -835,7 +835,7 @@ CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "
 - Deploy bersamaan dengan API Node.js (sidecar) atau service container terpisah (Cloud Run / ECS Fargate).
 - Min instance 1 untuk hindari cold start. Resource: 1 vCPU, 1 GB RAM cukup untuk dataset ≤ 10K customer.
 - Behind reverse proxy dengan rate limit (`/score/*` per-IP 30 rpm — scoring relatif mahal).
-- Mount `backend/model/` read-only.
+- Mount `model/model/` read-only.
 
 ### 11.3 Observability
 
@@ -850,11 +850,11 @@ CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "
 ### Sprint 1 (1 minggu) — Foundation
 - [ ] Fix scaler bug → re-export joblib v2 dengan `raw_scaler` + `log_scaler` eksplisit.
 - [ ] Verifikasi parity: output `test_inference.py` v1+hack vs v2 native identik.
-- [ ] Tambah `MODEL_CARD.md` di `backend/model/`.
+- [ ] Tambah `MODEL_CARD.md` di `model/model/`.
 - [ ] Convert notebook training jadi `train_pipeline.py` (CLI, untuk retrain offline).
 
 ### Sprint 2 (1 minggu) — Inference Service Core
-- [ ] Skeleton `backend/inference/` (FastAPI hello world).
+- [ ] Skeleton `model/inference/` (FastAPI hello world).
 - [ ] Implementasi `Predictor` class.
 - [ ] Implementasi `rfm.py` aggregation.
 - [ ] Implementasi `calibration.py` (build_profile + apply_profile).
@@ -865,9 +865,9 @@ CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "
 
 ### Sprint 3 (1 minggu) — Integrasi Node.js
 - [ ] Migration Postgres `0002_inference.sql` (tabel `datasets`, `dataset_profiles`, kolom `customer_segments.dataset_id`).
-- [ ] `server/src/services/inferenceService.js` (Node client).
+- [ ] `backend/frontend/src/services/inferenceService.js` (Node client).
 - [ ] Endpoints `POST /api/datasets`, `POST /api/datasets/:id/score`, `GET /api/datasets/:id/profile`, `GET /api/datasets/:id/customers`.
-- [ ] Validasi schema CSV di `server/src/services/datasetValidator.js`.
+- [ ] Validasi schema CSV di `backend/frontend/src/services/datasetValidator.js`.
 - [ ] Cache by content hash (idempoten upload).
 
 ### Sprint 4 (1 minggu) — Dashboard & Hardening

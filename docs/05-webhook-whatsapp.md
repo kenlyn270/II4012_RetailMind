@@ -60,7 +60,7 @@ Future: feedback loop for campaign effectiveness and model labels
 1. Jalankan backend:
 
 ```bash
-cd server
+cd backend
 npm run dev
 ```
 
@@ -73,7 +73,7 @@ ngrok http 3001
 atau gunakan script jika tersedia:
 
 ```bash
-cd server
+cd backend
 ./start-ngrok.sh
 ```
 

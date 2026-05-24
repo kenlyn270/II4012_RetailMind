@@ -30,12 +30,12 @@ The system combines machine learning models for deep customer understanding with
 *   **Backend (Planned):** Node.js, BullMQ, Redis, SQLite/PostgreSQL.
 
 ## Key Files & Directories
-*   `src/`: React frontend source code.
-    *   `src/components/`: UI components for analytics and campaign management (e.g., `WhatsAppCampaign.jsx`, `ChurnChart.jsx`).
+*   `frontend/src/`: React frontend source code.
+    *   `frontend/frontend/src/components/`: UI components for analytics and campaign management (e.g., `WhatsAppCampaign.jsx`, `ChurnChart.jsx`).
 *   `backend/`: ML pipeline and data assets.
-    *   `backend/data/`: Raw and processed datasets (`enriched_customer_analytics.csv`).
-    *   `backend/model/`: Serialized ML model assets (`retail_ai_model_assets.joblib`).
-    *   `backend/modelling/`: Jupyter notebooks for model training and experimentation.
+    *   `model/data/`: Raw and processed datasets (`enriched_customer_analytics.csv`).
+    *   `model/model/`: Serialized ML model assets (`retail_ai_model_assets.joblib`).
+    *   `model/modelling/`: Jupyter notebooks for model training and experimentation.
 *   `docs/` & `backend/docs/`: Comprehensive documentation on the pipeline, planning, and integration.
 
 ## Building and Running
@@ -56,13 +56,13 @@ npm run lint
 ```
 
 ### ML Pipeline (Python)
-The pipeline is currently managed via Jupyter notebooks in `backend/modelling/`. To run them, you need a Python environment with:
+The pipeline is currently managed via Jupyter notebooks in `model/modelling/`. To run them, you need a Python environment with:
 ```bash
 pip install pandas numpy scikit-learn lifetimes joblib matplotlib seaborn
 ```
 
 ## Development Conventions
-*   **Component-Based UI:** Keep components modular and reusable in `src/components/`.
+*   **Component-Based UI:** Keep components modular and reusable in `frontend/frontend/src/components/`.
 *   **Styling:** Use Tailwind CSS for rapid and consistent UI development.
 *   **Data Visualization:** Use Recharts for charts and graphs to maintain a clean aesthetic.
 *   **AI Integration:** Marketing copy generation should leverage the Gemini 2.0 Flash model for cost-effectiveness and speed.

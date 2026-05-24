@@ -13,7 +13,7 @@ Sebelum melakukan message blasting, pastikan:
 1. ✅ Server backend berjalan (`cd server && npm run dev`)
 2. ✅ Ngrok tunnel aktif (`./start-ngrok.sh`)
 3. ✅ Webhook URL sudah didaftarkan di Fonnte dashboard
-4. ✅ `FONNTE_TOKEN` sudah diisi di `server/.env`
+4. ✅ `FONNTE_TOKEN` sudah diisi di `backend/.env`
 5. ✅ Device WhatsApp terhubung di Fonnte
 6. ✅ Data kontak pelanggan sudah diimport (tabel `customer_contacts` dengan `whatsapp_opt_in = true`)
 

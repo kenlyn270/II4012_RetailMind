@@ -32,9 +32,9 @@ Gunakan `docs/README.md` sebagai indeks utama. AI agent harus membaca `docs/AI_A
 ### Tugas Frontend Dashboard
 
 1. `docs/AI_AGENT_CONTEXT.md`
-2. `src/App.jsx`
-3. `src/components/*`
-4. `src/api.js`
+2. `frontend/frontend/src/App.jsx`
+3. `frontend/frontend/src/components/*`
+4. `frontend/frontend/src/api.js`
 5. Jalankan validasi: `npm run lint` dan/atau `npm run build`.
 
 ### Tugas Campaign/WhatsApp/API
@@ -43,16 +43,16 @@ Gunakan `docs/README.md` sebagai indeks utama. AI agent harus membaca `docs/AI_A
 2. `docs/PLAN.md`
 3. `docs/wa.md`
 4. `WEBHOOK_SETUP.md`
-5. `server/src/index.js`
-6. `server/src/routes/*`, `server/src/workers/*`, dan modul integrasi terkait.
+5. `backend/frontend/src/index.js`
+6. `backend/frontend/src/routes/*`, `backend/frontend/src/workers/*`, dan modul integrasi terkait.
 
 ### Tugas ML/Data Science
 
 1. `docs/AI_AGENT_CONTEXT.md`
 2. `docs/pipeline_documentation.md`
 3. `docs/AIinput.md`
-4. `backend/modelling/*`
-5. `backend/data/*` dan `backend/model/*` hanya jika benar-benar diperlukan.
+4. `model/modelling/*`
+5. `model/data/*` dan `model/model/*` hanya jika benar-benar diperlukan.
 
 ### Tugas Dokumentasi
 

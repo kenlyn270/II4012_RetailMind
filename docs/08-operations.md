@@ -13,7 +13,7 @@ npm run preview
 ## Menjalankan Backend Express
 
 ```bash
-cd server
+cd backend
 npm install
 npm run dev
 npm start
@@ -27,13 +27,13 @@ Sesuaikan environment Python yang memiliki dependency FastAPI, pandas, scikit-le
 Contoh:
 
 ```bash
-uvicorn backend.inference.app:app --host 0.0.0.0 --port 8000 --reload
+uvicorn model.inference.app:app --host 0.0.0.0 --port 8000 --reload
 ```
 
 Jika memakai conda env project:
 
 ```bash
-/home/ikhbar/miniconda3/envs/basicneeds/bin/python -m uvicorn backend.inference.app:app --host 0.0.0.0 --port 8000 --reload
+/home/ikhbar/miniconda3/envs/basicneeds/bin/python -m uvicorn model.inference.app:app --host 0.0.0.0 --port 8000 --reload
 ```
 
 ## Environment Variable
@@ -51,7 +51,7 @@ INFERENCE_BASE_URL=http://localhost:8000
 ### Inference
 
 ```bash
-MODEL_PATH=backend/model/retail_ai_model_assets.joblib
+MODEL_PATH=model/model/retail_ai_model_assets.joblib
 ```
 
 ## Health Check
@@ -64,7 +64,7 @@ curl http://localhost:8000/health
 ## Ngrok/Webhook Local
 
 ```bash
-cd server
+cd backend
 npm run dev
 ngrok http 3001
 ```
@@ -76,7 +76,7 @@ Daftarkan URL HTTPS ngrok ke Fonnte webhook.
 Jangan commit:
 
 - `.env`, token, API key,
-- database lokal runtime (`server/data/*.db*`),
+- database lokal runtime (`backend/data/*.db*`),
 - nomor telepon nyata di dokumentasi publik,
 - dataset customer sensitif.
 

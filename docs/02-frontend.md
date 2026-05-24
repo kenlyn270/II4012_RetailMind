@@ -2,9 +2,9 @@
 
 ## Lokasi Kode
 
-- `src/App.jsx` — root UI, auth dummy, navigasi view.
-- `src/api.js` — API client ke backend Express.
-- `src/components/` — komponen dashboard dan campaign.
+- `frontend/src/App.jsx` — root UI, auth dummy, navigasi view.
+- `frontend/src/api.js` — API client ke backend Express.
+- `frontend/src/components/` — komponen dashboard dan campaign.
 
 ## Struktur View
 
@@ -42,7 +42,7 @@ Setelah login, user masuk dashboard dengan dua view utama:
 
 ## API Client
 
-Semua request frontend diarahkan ke `API_BASE = "/api"` di `src/api.js`.
+Semua request frontend diarahkan ke `API_BASE = "/api"` di `frontend/src/api.js`.
 
 ### Dataset/Inference
 
@@ -83,7 +83,7 @@ User login
   ↓
 Buka tab Intelligence
   ↓
-SystemStatusPanel cek status backend/inference
+SystemStatusPanel cek status model/inference
   ↓
 Upload dataset via DatasetUpload
   ↓

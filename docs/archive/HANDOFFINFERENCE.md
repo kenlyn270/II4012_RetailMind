@@ -20,18 +20,18 @@
     </key_knowledge>
 
     <artifact_trail>
-        - `backend/model/retail_ai_model_assets.joblib`: Diperbarui ke v2.0.0; menyertakan `raw_scaler` dan `log_scaler` terpisah.
-        - `backend/inference/app.py`: Aplikasi FastAPI dengan endpoint inferensi dan manajemen lifespan model.
-        - `server/src/db/migrations/0002_inference.sql`: Skema untuk tabel `datasets` dan `dataset_profiles`.
-        - `server/src/services/inferenceService.js`: Client Node.js untuk service Python.
-        - `server/src/routes/datasets.js`: Endpoint API untuk upload dan scoring dataset.
+        - `model/model/retail_ai_model_assets.joblib`: Diperbarui ke v2.0.0; menyertakan `raw_scaler` dan `log_scaler` terpisah.
+        - `model/inference/app.py`: Aplikasi FastAPI dengan endpoint inferensi dan manajemen lifespan model.
+        - `backend/frontend/src/db/migrations/0002_inference.sql`: Skema untuk tabel `datasets` dan `dataset_profiles`.
+        - `backend/frontend/src/services/inferenceService.js`: Client Node.js untuk service Python.
+        - `backend/frontend/src/routes/datasets.js`: Endpoint API untuk upload dan scoring dataset.
     </artifact_trail>
 
     <file_system_state>
         - CWD: `/home/ikhbar/Documents/GitHub/II4012_RetailMind`
-        - Aset ML: `backend/model/retail_ai_model_assets.joblib`, `MODEL_CARD.md`
-        - Source Inferensi: `backend/inference/` (FastAPI)
-        - Backend Node: `server/src/` (Routes: datasets.js, Services: inferenceService.js, validator.js)
+        - Aset ML: `model/model/retail_ai_model_assets.joblib`, `MODEL_CARD.md`
+        - Source Inferensi: `model/inference/` (FastAPI)
+        - Backend Node: `backend/frontend/src/` (Routes: datasets.js, Services: inferenceService.js, validator.js)
     </file_system_state>
 
     <recent_actions>

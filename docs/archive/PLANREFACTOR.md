@@ -1,7 +1,7 @@
 # 🐘 PLANREFACTOR — Migrasi Database Backend ke PostgreSQL
 
 > **Scope:** Migrasi storage layer RetailMind dari **SQLite (better-sqlite3)** ke **PostgreSQL**, tanpa mengubah kontrak API publik dan UX dashboard.
-> **Owner:** Backend / Server (`server/`)
+> **Owner:** Backend / Server (`backend/`)
 > **Status:** Draft — siap dieksekusi bertahap.
 > **Last updated:** 2026-05-23
 
@@ -11,14 +11,14 @@
 
 | Aspek | Sekarang | Target |
 |---|---|---|
-| Engine | SQLite (file `server/data/retailmind.db`) via `better-sqlite3` | PostgreSQL 16 (managed atau self-hosted) via `pg` (node-postgres) |
+| Engine | SQLite (file `backend/data/retailmind.db`) via `better-sqlite3` | PostgreSQL 16 (managed atau self-hosted) via `pg` (node-postgres) |
 | API style | Synchronous (`db.prepare(...).run()`) | Asynchronous (`await pool.query(...)`) |
 | Schema | `CREATE TABLE IF NOT EXISTS` di kode (`db/database.js`) | Versioned migrations (`db/migrations/*.sql`) |
 | JSON | Disimpan sebagai `TEXT` lalu `JSON.parse` manual | Native `JSONB` |
 | Boolean | `INTEGER` 0/1 | `BOOLEAN` |
 | Timestamp | `TEXT DEFAULT (datetime('now'))` | `TIMESTAMPTZ DEFAULT NOW()` |
 | Concurrency | WAL mode, single-writer | MVCC native, multi-writer |
-| Seed | `node src/db/seed.js` (parse CSV → insert) | Sama, tapi pakai `COPY FROM` untuk dataset besar |
+| Seed | `node frontend/src/db/seed.js` (parse CSV → insert) | Sama, tapi pakai `COPY FROM` untuk dataset besar |
 
 Migrasi ini **non-trivial** karena seluruh service layer (`campaignService.js`, `segmentService.js`, `copywriterService.js`, `dispatchWorker.js`, `routes/webhooks.js`) memakai pemanggilan sinkron `db.prepare().run()/get()/all()`. Strategi: lapisi DB dengan adapter async, lalu refactor pemanggil satu per satu.
 
@@ -38,7 +38,7 @@ Alasan keluar dari SQLite untuk RetailMind ke depan:
 
 ## 2. Inventaris Permukaan Database
 
-Hasil audit kode di `server/src/`:
+Hasil audit kode di `backend/frontend/src/`:
 
 ### 2.1 Tabel yang dipakai
 
@@ -212,12 +212,12 @@ Migrasi besar gampang tergelincir. Pendekatan yang dianjurkan: **lapisan abstrak
 
 ### Fase A — Persiapan (tanpa downtime)
 
-1. **Tambah dependency** di `server/package.json`:
+1. **Tambah dependency** di `backend/package.json`:
    ```json
    "pg": "^8.13.0",
    "node-pg-migrate": "^7.6.1"   // dev
    ```
-2. **Buat connection pool wrapper** baru `server/src/db/pool.js`:
+2. **Buat connection pool wrapper** baru `backend/frontend/src/db/pool.js`:
    ```js
    import pg from "pg";
    const { Pool } = pg;
@@ -245,8 +245,8 @@ Migrasi besar gampang tergelincir. Pendekatan yang dianjurkan: **lapisan abstrak
    }
    export default pool;
    ```
-3. **Buat folder migrations** `server/src/db/migrations/` dengan file `0001_init.sql` (skema dari §3).
-4. **Tambah env** di `server/.env.example`:
+3. **Buat folder migrations** `backend/frontend/src/db/migrations/` dengan file `0001_init.sql` (skema dari §3).
+4. **Tambah env** di `backend/.env.example`:
    ```bash
    DATABASE_URL=postgres://retailmind:retailmind@localhost:5432/retailmind
    PG_POOL_MAX=10
@@ -272,7 +272,7 @@ Migrasi besar gampang tergelincir. Pendekatan yang dianjurkan: **lapisan abstrak
 
 Bungkus akses DB di balik antarmuka tipis sehingga service layer tidak perlu tahu driver-nya.
 
-`server/src/db/index.js`:
+`backend/frontend/src/db/index.js`:
 ```js
 import * as sqliteAdapter from "./adapters/sqliteAdapter.js";
 import * as pgAdapter from "./adapters/pgAdapter.js";
@@ -304,7 +304,7 @@ Setiap PR:
 
 ### Fase D — Data Migration + Cutover
 
-1. **Sekali-jalan importer** `server/src/db/migrate-from-sqlite.js`:
+1. **Sekali-jalan importer** `backend/frontend/src/db/migrate-from-sqlite.js`:
    - Buka SQLite read-only.
    - Untuk tiap tabel: `SELECT *` → batch `INSERT ... ON CONFLICT DO UPDATE`.
    - Konversi tipe: `0/1` → `false/true`, ISO string → `TIMESTAMPTZ`, `TEXT JSON` → `JSONB::text::jsonb`.
@@ -327,7 +327,7 @@ Setiap PR:
 
 ## 5. Re-seeding di PostgreSQL
 
-`server/src/db/seed.js` saat ini parse CSV + insert satu-satu. Untuk dataset besar (`enriched_customer_analytics.csv` 850 KB, atau `clean_transactions.csv` 75 MB), gunakan `COPY FROM`:
+`backend/frontend/src/db/seed.js` saat ini parse CSV + insert satu-satu. Untuk dataset besar (`enriched_customer_analytics.csv` 850 KB, atau `clean_transactions.csv` 75 MB), gunakan `COPY FROM`:
 
 ```js
 // pseudocode pakai pg-copy-streams

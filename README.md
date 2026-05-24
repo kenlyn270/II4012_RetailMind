@@ -17,6 +17,7 @@ Mulai dari:
 Frontend:
 
 ```bash
+cd frontend
 npm install
 npm run dev
 ```
@@ -24,7 +25,7 @@ npm run dev
 Backend:
 
 ```bash
-cd server
+cd backend
 npm install
 npm run dev
 ```
@@ -32,7 +33,7 @@ npm run dev
 Inference:
 
 ```bash
-uvicorn backend.inference.app:app --host 0.0.0.0 --port 8000 --reload
+uvicorn model.inference.app:app --host 0.0.0.0 --port 8000 --reload
 ```
 
 Dokumen lama yang sebelumnya tersebar sudah dipindahkan ke [`docs/archive/`](./docs/archive/) sebagai referensi historis.

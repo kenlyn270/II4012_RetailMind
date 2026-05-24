@@ -92,7 +92,7 @@ Alih-alih menunggu pesan masuk lalu membalas, sistem ini **secara aktif menginis
 
 #### A. Rule-Based Segmentation (Quick Win)
 ```javascript
-// src/services/segmentationService.js
+// frontend/src/services/segmentationService.js
 const SEGMENT_RULES = {
   churn_risk: {
     label: 'Churn Risk',
@@ -160,7 +160,7 @@ interface SegmentedCustomer {
 - Strict output parsing — validasi panjang, bahasa, tidak boleh kosong
 
 ```javascript
-// src/services/copywriterService.js
+// frontend/src/services/copywriterService.js
 
 const COPYWRITER_SYSTEM_PROMPT = `
 Kamu adalah seorang copywriter WhatsApp profesional untuk brand [BRAND_NAME].
@@ -305,7 +305,7 @@ CREATE INDEX idx_campaign_jobs_phone ON campaign_jobs(phone);
 
 **Implementasi Simple (tanpa Redis):**
 ```javascript
-// src/workers/dispatchWorker.js
+// frontend/src/workers/dispatchWorker.js
 
 const BATCH_SIZE = 10;
 const INTER_MESSAGE_DELAY_MS = 8000; // 8 detik antar pesan
@@ -361,7 +361,7 @@ setInterval(processBatch, 30000);
 
 **Implementasi BullMQ (Production):**
 ```javascript
-// src/workers/broadcastQueue.js
+// frontend/src/workers/broadcastQueue.js
 const { Queue, Worker } = require('bullmq');
 const Redis = require('ioredis');
 
@@ -405,9 +405,9 @@ const worker = new Worker('broadcast', async (job) => {
 
 **Memanfaatkan endpoint yang sudah ada di HitungUang:**
 
-Di `src/index.js` sudah ada handler untuk `FONNTE_MESSAGE_STATUS_WEBHOOK_PATH`:
+Di `frontend/src/index.js` sudah ada handler untuk `FONNTE_MESSAGE_STATUS_WEBHOOK_PATH`:
 ```javascript
-// Sudah ada di src/index.js line 229-231
+// Sudah ada di frontend/src/index.js line 229-231
 if (request.method === 'POST' && requestUrl.pathname === messageStatusWebhookPath) {
     return await processEventWebhook(request, response, requestUrl, 'message-status');
 }
@@ -443,7 +443,7 @@ async function processMessageStatusWebhook(payload) {
 > Ini adalah komponen kritis untuk mencegah nomor WA diblokir oleh WhatsApp.
 
 ```javascript
-// src/utils/broadcastThrottle.js
+// frontend/src/utils/broadcastThrottle.js
 
 const DAILY_LIMIT_PER_DEVICE = 500;      // Rekomendasi Fonnte untuk keamanan
 const MIN_DELAY_BETWEEN_MESSAGES = 5;    // detik
@@ -494,7 +494,7 @@ function buildFonnteDataPayload(jobs) {
 ## 5. Struktur File yang Diusulkan
 
 ```
-src/
+frontend/src/
 ├── index.js                         # Extend existing: tambah broadcast endpoint
 ├── handlers/
 │   └── messageHandler.js            # Tidak berubah (inbound bot)
@@ -527,7 +527,7 @@ supabase/
 
 ## 6. API Endpoints yang Dibutuhkan
 
-### Internal REST API (Express/HTTP di `src/index.js`)
+### Internal REST API (Express/HTTP di `frontend/src/index.js`)
 
 ```
 POST   /api/campaigns                    # Buat campaign baru
@@ -572,12 +572,12 @@ COPYWRITER_CACHE_TTL_MS=3600000      # 1 jam
 
 | Komponen | File | Cara Reuse |
 |---|---|---|
-| **Fonnte Send** | `src/services/fonnteService.js` | Extend dengan parameter `delay`, `typing`, `data` |
-| **LLM Service** | `src/utils/llmService.js` | Direct import di `copywriterService.js` |
-| **Logger** | `src/utils/logger.js` | Direct import |
-| **DB Client** | `src/services/dbService.js` | Extend dengan campaign queries |
-| **Webhook Server** | `src/index.js` | Tambah route `/api/*` dan extend message-status handler |
-| **Status Webhook** | `src/index.js` line 229-231 | Sudah ada, isi logicnya |
+| **Fonnte Send** | `frontend/src/services/fonnteService.js` | Extend dengan parameter `delay`, `typing`, `data` |
+| **LLM Service** | `frontend/src/utils/llmService.js` | Direct import di `copywriterService.js` |
+| **Logger** | `frontend/src/utils/logger.js` | Direct import |
+| **DB Client** | `frontend/src/services/dbService.js` | Extend dengan campaign queries |
+| **Webhook Server** | `frontend/src/index.js` | Tambah route `/api/*` dan extend message-status handler |
+| **Status Webhook** | `frontend/src/index.js` line 229-231 | Sudah ada, isi logicnya |
 | **Supabase Client** | Via `dbService.js` | Tidak perlu buat ulang |
 
 ---
@@ -629,7 +629,7 @@ const campaignAnalytics = {
 - [ ] Implementasi `segmentationService.js` dengan rule-based segmentation
 - [ ] Implementasi `copywriterService.js` dengan LLM + cache + validation
 - [ ] Implementasi `dispatchWorker.js` (polling mode, tanpa Redis)
-- [ ] Extend `src/index.js` dengan API routes + message-status handler
+- [ ] Extend `frontend/src/index.js` dengan API routes + message-status handler
 
 ### Phase 2 — Operator Interface (2-3 hari)
 - [ ] Halaman Campaign Manager di `web/app/broadcast/`

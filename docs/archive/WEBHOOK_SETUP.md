@@ -37,7 +37,7 @@ npm install
 
 ### 2. Konfigurasi Environment
 
-Pastikan file `server/.env` sudah terisi:
+Pastikan file `backend/.env` sudah terisi:
 
 ```env
 FONNTE_TOKEN=your_fonnte_token_here

@@ -19,12 +19,12 @@ services:
   inference:
     build:
       context: .
-      dockerfile: backend/inference/Dockerfile
+      dockerfile: model/inference/Dockerfile
     container_name: retailmind-inference
     ports:
       - "8001:8000"
     environment:
-      MODEL_PATH: /app/backend/model/retail_ai_model_assets.joblib
+      MODEL_PATH: /app/model/model/retail_ai_model_assets.joblib
     healthcheck:
       test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=2).read()\""]
       interval: 15s

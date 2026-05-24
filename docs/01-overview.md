@@ -51,18 +51,18 @@ Webhook status/reply
 ## Struktur Repository
 
 ```text
-src/                  Frontend React/Vite
-src/components/       Komponen dashboard dan campaign UI
-src/api.js            API client frontend
-server/src/           Backend Express
-server/src/routes/    Route segments, campaigns, datasets, system, webhooks
-server/src/services/  Campaign, copywriter, Fonnte, inference, validator
-server/src/workers/   Dispatch worker broadcast
-server/data/          SQLite lokal runtime
-backend/inference/    FastAPI inference service
-backend/modelling/    Notebook/script training dan testing
-backend/model/        Artifact model joblib + model card
-backend/data/         Dataset mentah/processed/dummy
+frontend/src/                  Frontend React/Vite
+frontend/src/components/       Komponen dashboard dan campaign UI
+frontend/src/api.js            API client frontend
+backend/src/           Backend Express
+backend/src/routes/    Route segments, campaigns, datasets, system, webhooks
+backend/src/services/  Campaign, copywriter, Fonnte, inference, validator
+backend/src/workers/   Dispatch worker broadcast
+backend/data/          SQLite lokal runtime
+model/inference/    FastAPI inference service
+model/modelling/    Notebook/script training dan testing
+model/model/        Artifact model joblib + model card
+model/data/         Dataset mentah/processed/dummy
 docs/                 Dokumentasi terstruktur
 ```
 

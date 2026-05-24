@@ -52,7 +52,7 @@ Mitigasi:
 - Rapikan dokumentasi ke `docs/`.
 - Pastikan upload dataset → scoring → dashboard stabil.
 - Demo blast aman dengan dry-run dan nomor representative.
-- Health status backend/inference jelas.
+- Health status model/inference jelas.
 
 ### Phase 2 — Campaign Production Readiness
 

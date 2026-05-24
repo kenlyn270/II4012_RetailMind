@@ -15,10 +15,10 @@
       - Commit & Pull Request Guidelines
       - Agent-Specific Instructions
   - Reference actual repo paths:
-      - src/ for React source
-      - src/components/ for dashboard components
-      - src/assets/ and public/ for static assets
-      - backend/data/, backend/model/, and backend/modelling/ for datasets, model artifact, and notebooks
+      - frontend/src/ for React source
+      - frontend/frontend/src/components/ for dashboard components
+      - frontend/frontend/src/assets/ and public/ for static assets
+      - model/data/, model/model/, and model/modelling/ for datasets, model artifact, and notebooks
       - docs/ and backend/docs/ for documentation
   - List actual npm commands:
       - npm run dev
