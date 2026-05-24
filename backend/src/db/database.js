@@ -60,6 +60,15 @@ export async function initDatabase() {
       CREATE TYPE campaign_job_status AS ENUM ('pending','generating','queued','sent','delivered','read','failed');
     EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 
+    CREATE TABLE IF NOT EXISTS users (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      name TEXT NOT NULL,
+      email TEXT NOT NULL UNIQUE,
+      password_hash TEXT NOT NULL,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+
     CREATE TABLE IF NOT EXISTS customer_contacts (
       customer_id TEXT PRIMARY KEY,
       phone TEXT NOT NULL,

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import StatsRow from "./components/StatsRow";
 import ChurnChart from "./components/ChurnChart";
 import HighRiskTable from "./components/HighRiskTable";
@@ -7,33 +7,129 @@ import SegmentBreakdown from "./components/SegmentBreakdown";
 import WhatsAppCampaign from "./components/WhatsAppCampaign";
 import DatasetUpload from "./components/DatasetUpload";
 import SystemStatusPanel from "./components/SystemStatusPanel";
+import CustomerDetail from "./components/CustomerDetail";
+import { 
+  PredictionSummary, 
+  CLTVTierBreakdown, 
+  SegmentContribution, 
+  RecommendedActionCard 
+} from "./components/InferenceInsights";
+import { login, register, getMe, getLatestDatasetSummary } from "./api";
 
 export default function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("login");  
-  const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    return localStorage.getItem("retailmind_logged_in") === "true";
-  });
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState(null);
+  const [authError, setAuthError] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
   
   const [currentView, setCurrentView] = useState("intelligence");
-  const [datasetProfile, setDatasetProfile] = useState(null);
+  const [datasetProfile, setDatasetProfile] = useState(() => {
+    const saved = localStorage.getItem("retailmind_latest_profile");
+    return saved ? JSON.parse(saved) : null;
+  });
+
+  useEffect(() => {
+    if (datasetProfile) {
+      localStorage.setItem("retailmind_latest_profile", JSON.stringify(datasetProfile));
+    } else {
+      localStorage.removeItem("retailmind_latest_profile");
+    }
+  }, [datasetProfile]);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const token = localStorage.getItem("retailmind_token");
+      if (token) {
+        try {
+          const userData = await getMe();
+          setUser(userData);
+          setIsLoggedIn(true);
+          
+          // Auto-load latest dataset
+          try {
+            const latest = await getLatestDatasetSummary();
+            setDatasetProfile(latest);
+          } catch (e) {
+            console.log("No previous dataset found");
+          }
+        } catch (err) {
+          localStorage.removeItem("retailmind_token");
+        }
+      }
+      setIsLoading(false);
+    };
+    checkAuth();
+  }, []);
 
   const openModal = (tab) => {
+    setAuthError("");
     setActiveTab(tab);
     setIsModalOpen(true);
   };
 
-  const handleAuth = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    setIsModalOpen(false);
-    setIsLoggedIn(true);
-    localStorage.setItem("retailmind_logged_in", "true");
+    setAuthError("");
+    const email = e.target.email.value;
+    const password = e.target.password.value;
+    
+    try {
+      const res = await login(email, password);
+      localStorage.setItem("retailmind_token", res.token);
+      setUser(res.user);
+      setIsLoggedIn(true);
+      setIsModalOpen(false);
+
+      // Load latest dataset after successful login
+      try {
+        const latest = await getLatestDatasetSummary();
+        setDatasetProfile(latest);
+      } catch (e) {
+        console.log("No previous dataset found");
+      }
+    } catch (err) {
+      setAuthError(err.message);
+    }
+  };
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    setAuthError("");
+    const name = e.target.name.value;
+    const email = e.target.email.value;
+    const password = e.target.password.value;
+
+    try {
+      await register(name, email, password);
+      // Auto login after register
+      const loginRes = await login(email, password);
+      localStorage.setItem("retailmind_token", loginRes.token);
+      setUser(loginRes.user);
+      setIsLoggedIn(true);
+      setIsModalOpen(false);
+    } catch (err) {
+      setAuthError(err.message);
+    }
   };
 
   const handleLogout = () => {
     setIsLoggedIn(false);
-    localStorage.removeItem("retailmind_logged_in");
+    setUser(null);
+    localStorage.removeItem("retailmind_token");
+    localStorage.removeItem("retailmind_latest_profile");
+    setDatasetProfile(null);
+    setCurrentView("intelligence");
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-[#FCFAF5] flex items-center justify-center">
+        <div className="w-12 h-12 border-4 border-amber-400 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
 
   if (isLoggedIn) {
     return (
@@ -78,7 +174,9 @@ export default function App() {
                 Logout
               </button>
               <div className="flex items-center gap-2">
-                <div className="w-10 h-10 rounded-full bg-[#FFD13B] flex items-center justify-center text-[#1C1D36] font-bold shadow-md cursor-pointer border border-yellow-400">RM</div>
+                <div className="w-10 h-10 rounded-full bg-[#FFD13B] flex items-center justify-center text-[#1C1D36] font-bold shadow-md cursor-pointer border border-yellow-400">
+                  {user?.name?.split(" ").map(n => n[0]).join("").toUpperCase() || "RM"}
+                </div>
               </div>
             </div>
           </nav>
@@ -87,7 +185,7 @@ export default function App() {
           {currentView === "intelligence" && (
             <div className="mb-8 relative z-10">
               <h1 className="text-4xl md:text-[2.5rem] font-sans font-bold text-[#1C1D36] tracking-tight mb-2">
-                Welcome back, Admin
+                Welcome back, {user?.name?.split(" ")[0] || "Admin"}
               </h1>
               <p className="text-slate-500 font-medium">Here's your AI-powered customer intelligence overview for today.</p>
             </div>
@@ -96,18 +194,49 @@ export default function App() {
           {/* Main Content Grid */}
           <div className="relative z-10">
             {currentView === "intelligence" ? (
-              <div className="flex flex-col gap-6">
+              <div className="flex flex-col gap-6 animate-in fade-in duration-500">
                 <SystemStatusPanel />
                 <DatasetUpload onScored={(result) => setDatasetProfile(result)} />
-                <StatsRow datasetProfile={datasetProfile} />
+                
+                {datasetProfile ? (
+                  <>
+                    <StatsRow datasetProfile={datasetProfile} />
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <ChurnChart datasetProfile={datasetProfile} />
-                  <RFMMap datasetProfile={datasetProfile} />
-                  <HighRiskTable datasetProfile={datasetProfile} />
-                  <SegmentBreakdown datasetProfile={datasetProfile} />
-                </div>
+                    {/* Section: AI Insights (Phase 3 - Real Data Only) */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                      <PredictionSummary datasetProfile={datasetProfile} />
+                      <CLTVTierBreakdown datasetProfile={datasetProfile} />
+                      <SegmentContribution datasetProfile={datasetProfile} />
+                      <RecommendedActionCard datasetProfile={datasetProfile} />
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <ChurnChart datasetProfile={datasetProfile} />
+                      <RFMMap datasetProfile={datasetProfile} />
+                      <HighRiskTable 
+                        datasetProfile={datasetProfile} 
+                        onViewAll={() => setCurrentView("intelligence_detail")}
+                      />
+                      <SegmentBreakdown datasetProfile={datasetProfile} />
+                    </div>
+                  </>
+                ) : (
+                  <div className="bg-white/40 backdrop-blur-md rounded-[40px] border-2 border-dashed border-white/60 p-20 flex flex-col items-center justify-center text-center">
+                    <div className="w-20 h-20 rounded-full bg-amber-100 flex items-center justify-center mb-6">
+                      <span className="text-4xl">📊</span>
+                    </div>
+                    <h2 className="text-2xl font-bold text-[#1C1D36] mb-2">No Dataset Profiled</h2>
+                    <p className="text-slate-500 max-w-md">
+                      Upload your transaction data above to unlock AI-powered customer intelligence, churn predictions, and automated campaign generation.
+                    </p>
+                  </div>
+                )}
               </div>
+            ) : currentView === "intelligence_detail" ? (
+              <CustomerDetail 
+                customers={datasetProfile?.customers || []} 
+                onBack={() => setCurrentView("intelligence")} 
+              />
             ) : (
               <div className="animate-in fade-in duration-500">
                 <WhatsAppCampaign />
@@ -211,10 +340,11 @@ export default function App() {
             </div>
 
             {activeTab === 'login' && (
-              <form onSubmit={handleAuth} className="space-y-4">
+              <form onSubmit={handleLogin} className="space-y-4">
                 <h2 className="text-2xl font-bold text-[#1C1D36] mb-6">Welcome Back!</h2>
-                <input type="email" required placeholder="Email Address" className="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:border-amber-400 focus:bg-white transition text-sm" />
-                <input type="password" required placeholder="Password" className="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:border-amber-400 focus:bg-white transition text-sm" />
+                {authError && <p className="text-red-500 text-xs font-bold bg-red-50 p-3 rounded-xl">{authError}</p>}
+                <input name="email" type="email" required placeholder="Email Address" className="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:border-amber-400 focus:bg-white transition text-sm" />
+                <input name="password" type="password" required placeholder="Password" className="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:border-amber-400 focus:bg-white transition text-sm" />
                 <button type="submit" className="w-full bg-[#FFD13B] text-[#1C1D36] py-4 rounded-2xl font-bold shadow-lg shadow-yellow-200/50 hover:scale-[1.02] transition mt-2">
                   Login to RetailMind
                 </button>
@@ -222,11 +352,12 @@ export default function App() {
             )}
 
             {activeTab === 'register' && (
-              <form onSubmit={handleAuth} className="space-y-4">
+              <form onSubmit={handleRegister} className="space-y-4">
                 <h2 className="text-2xl font-bold text-[#1C1D36] mb-6">Join the Platform.</h2>
-                <input type="text" required placeholder="Full Name" className="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:border-amber-400 focus:bg-white transition text-sm" />
-                <input type="email" required placeholder="Email Address" className="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:border-amber-400 focus:bg-white transition text-sm" />
-                <input type="password" required placeholder="Create Password" className="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:border-amber-400 focus:bg-white transition text-sm" />
+                {authError && <p className="text-red-500 text-xs font-bold bg-red-50 p-3 rounded-xl">{authError}</p>}
+                <input name="name" type="text" required placeholder="Full Name" className="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:border-amber-400 focus:bg-white transition text-sm" />
+                <input name="email" type="email" required placeholder="Email Address" className="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:border-amber-400 focus:bg-white transition text-sm" />
+                <input name="password" type="password" required placeholder="Create Password" className="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:border-amber-400 focus:bg-white transition text-sm" />
                 <button type="submit" className="w-full bg-[#1C1D36] text-white py-4 rounded-2xl font-bold shadow-lg shadow-slate-300 hover:scale-[1.02] transition mt-2">
                   Create Account
                 </button>

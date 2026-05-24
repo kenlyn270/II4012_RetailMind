@@ -4,13 +4,36 @@
 const API_BASE = "/api";
 
 async function request(path, options = {}) {
+  const token = localStorage.getItem("retailmind_token");
+  const headers = { "Content-Type": "application/json", ...options.headers };
+  if (token) headers["Authorization"] = `Bearer ${token}`;
+
   const res = await fetch(`${API_BASE}${path}`, {
-    headers: { "Content-Type": "application/json", ...options.headers },
     ...options,
+    headers,
   });
   const data = await res.json();
   if (!res.ok) throw new Error(data.error || `Request failed: ${res.status}`);
   return data;
+}
+
+// Auth
+export function login(email, password) {
+  return request("/auth/login", {
+    method: "POST",
+    body: JSON.stringify({ email, password }),
+  });
+}
+
+export function register(name, email, password) {
+  return request("/auth/register", {
+    method: "POST",
+    body: JSON.stringify({ name, email, password }),
+  });
+}
+
+export function getMe() {
+  return request("/auth/me");
 }
 
 // Segments
@@ -35,6 +58,10 @@ export async function scoreDatasetDirect(file) {
 
 export function getDatasetProfile(datasetId) {
   return request(`/datasets/${datasetId}/profile`);
+}
+
+export function getLatestDatasetSummary() {
+  return request("/datasets/latest-summary");
 }
 
 export function getSystemStatus() {

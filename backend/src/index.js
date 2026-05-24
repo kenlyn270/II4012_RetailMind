@@ -7,6 +7,7 @@ import campaignsRouter from "./routes/campaigns.js";
 import webhooksRouter from "./routes/webhooks.js";
 import datasetsRouter from "./routes/datasets.js";
 import systemRouter from "./routes/system.js";
+import authRouter from "./routes/auth.js";
 import { startWorker } from "./workers/dispatchWorker.js";
 
 const app = express();
@@ -20,6 +21,7 @@ app.use(express.json());
 await initDatabase();
 
 // Routes
+app.use("/api/auth", authRouter);
 app.use("/api/segments", segmentsRouter);
 app.use("/api/campaigns", campaignsRouter);
 app.use("/api/datasets", datasetsRouter);

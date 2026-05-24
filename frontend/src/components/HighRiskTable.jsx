@@ -19,11 +19,11 @@ function money(value) {
   return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(Number(value || 0));
 }
 
-function buildCustomers(datasetProfile) {
-  if (!datasetProfile?.customers?.length) return fallbackCustomers;
+export function buildHighRiskCustomers(datasetProfile, limit = 5) {
+  if (!datasetProfile?.customers?.length) return fallbackCustomers.slice(0, limit);
   return [...datasetProfile.customers]
     .sort((a, b) => Number(b.churnRiskScore || 0) - Number(a.churnRiskScore || 0))
-    .slice(0, 5)
+    .slice(0, limit)
     .map((c) => ({
       id: c.customerId,
       name: `Customer ${c.customerId}`,
@@ -35,8 +35,8 @@ function buildCustomers(datasetProfile) {
     }));
 }
 
-export default function HighRiskTable({ datasetProfile }) {
-  const customers = buildCustomers(datasetProfile);
+export default function HighRiskTable({ datasetProfile, onViewAll }) {
+  const customers = buildHighRiskCustomers(datasetProfile);
   return (
     <div className="bg-white/70 backdrop-blur-md rounded-[32px] p-6 border border-white shadow-sm h-full flex flex-col">
       
@@ -51,7 +51,11 @@ export default function HighRiskTable({ datasetProfile }) {
             <p className="text-xs text-slate-500">{datasetProfile ? "Top 5 from uploaded dataset" : "Top 5 to churn this month"}</p>
           </div>
         </div>
-        <button className="text-xs font-bold px-4 py-2 rounded-full bg-slate-100 text-[#1C1D36] hover:bg-slate-200 transition">
+        <button
+          type="button"
+          onClick={onViewAll}
+          className="text-xs font-bold px-4 py-2 rounded-full bg-slate-100 text-[#1C1D36] hover:bg-slate-200 transition"
+        >
           View all
         </button>
       </div>

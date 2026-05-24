@@ -239,6 +239,83 @@ router.post("/score-direct", upload.single("file"), async (req, res) => {
 });
 
 /**
+ * GET /api/datasets/latest-summary
+ * Fetch the most recently analyzed dataset results to restore dashboard state.
+ */
+router.get("/latest-summary", async (req, res) => {
+  try {
+    // 1. Get the latest dataset profile
+    const latestProfile = await queryOne(
+      `SELECT dp.profile, d.id as dataset_id, d.name, d.customer_count, d.row_count
+       FROM dataset_profiles dp
+       JOIN datasets d ON dp.dataset_id = d.id
+       ORDER BY dp.created_at DESC LIMIT 1`
+    );
+
+    if (!latestProfile) {
+      return res.status(404).json({ error: "No dataset found" });
+    }
+
+    // 2. Get customers for this dataset
+    const customersRaw = await queryMany(
+      `SELECT 
+        customer_id as "customerId",
+        recency, frequency, monetary, country,
+        anomaly_label as "anomalyLabel",
+        anomaly_score as "anomalyScore",
+        churn_risk_score as "churnRiskScore",
+        kmeans_cluster as "kmeansCluster",
+        kmeans_segment as "kmeansSegment",
+        cltv_6_months as "cltv6Months",
+        cltv_segment as "cltvSegment",
+        recommended_action as "recommendedAction",
+        explanation
+       FROM customer_segments 
+       WHERE dataset_id = $1`,
+      [latestProfile.dataset_id]
+    );
+
+    // 3. Reconstruct Summary (logic copied from score-direct for consistency)
+    const churnCounts = customersRaw.reduce((acc, c) => {
+      // Simple heuristic for risk level if not stored explicitly in DB
+      const score = c.churnRiskScore;
+      const level = score > 80 ? "critical" : score > 60 ? "high" : score > 30 ? "medium" : "low";
+      acc[level] = (acc[level] || 0) + 1;
+      return acc;
+    }, {});
+
+    const cltvCounts = customersRaw.reduce((acc, c) => {
+      const key = c.cltvSegment || "Unknown";
+      acc[key] = (acc[key] || 0) + 1;
+      return acc;
+    }, {});
+
+    const segmentCounts = customersRaw.reduce((acc, c) => {
+      acc[c.kmeansSegment] = (acc[c.kmeansSegment] || 0) + 1;
+      return acc;
+    }, {});
+
+    res.json({
+      success: true,
+      datasetId: latestProfile.dataset_id,
+      customerCount: latestProfile.customer_count,
+      rowCount: latestProfile.row_count,
+      profile: latestProfile.profile,
+      summary: {
+        churnCounts,
+        cltvCounts,
+        segmentCounts
+      },
+      customers: customersRaw
+    });
+
+  } catch (error) {
+    console.error("[DATASETS] Latest summary error:", error);
+    res.status(500).json({ error: "Failed to fetch latest summary" });
+  }
+});
+
+/**
  * GET /api/datasets/:id/profile
  * Get the calibration profile for a dataset.
  */
