@@ -1,84 +1,56 @@
-# Dokumentasi RetailMind
+# Dokumentasi Terstruktur RetailMind
 
-Selamat datang di pusat dokumentasi RetailMind. Folder `docs/` adalah sumber utama untuk memahami konteks produk, arsitektur, pipeline data/ML, dan orkestrasi kerja AI agent.
+Dokumentasi ini adalah sumber kebenaran tunggal untuk project RetailMind. Semua dokumen lama yang tersebar di root, `backend/docs/`, dan dokumen plan historis sudah dikonsolidasikan ke folder `docs/`.
 
-## Quick Start untuk AI Agent
+## Urutan Baca Cepat
 
-Baca dokumen berikut secara berurutan sebelum melakukan perubahan:
-
-1. [`AI_AGENT_CONTEXT.md`](./AI_AGENT_CONTEXT.md) — konteks utama project untuk AI agent.
-2. [`DOC_ORCHESTRATION.md`](./DOC_ORCHESTRATION.md) — peta seluruh dokumentasi Markdown dan statusnya.
-3. Dokumen domain sesuai tugas:
-   - Frontend/UI: cek `src/App.jsx`, `src/components/`, `src/api.js`.
-   - Campaign/WhatsApp: baca [`PLAN.md`](./PLAN.md), [`wa.md`](./wa.md), lalu `../WEBHOOK_SETUP.md`.
-   - ML/Data: baca [`pipeline_documentation.md`](./pipeline_documentation.md), [`AIinput.md`](./AIinput.md), dan notebook di `../backend/modelling/`.
+1. [01-overview.md](./01-overview.md) — ringkasan produk, arsitektur, stack, struktur repo.
+2. [02-frontend.md](./02-frontend.md) — frontend React/Vite, komponen, state, dan API client.
+3. [03-backend.md](./03-backend.md) — backend Express, database, service, worker, endpoint.
+4. [04-inference-process.md](./04-inference-process.md) — pipeline data, model, scoring, kalibrasi, rekomendasi.
+5. [05-webhook-whatsapp.md](./05-webhook-whatsapp.md) — Fonnte/WhatsApp, webhook, status, setup ngrok.
+6. [06-user-journey.md](./06-user-journey.md) — journey user dari login, upload dataset, insight, sampai blasting.
+7. [07-campaign-ai-copywriting.md](./07-campaign-ai-copywriting.md) — AI copywriter Gemini dan orkestrasi campaign.
+8. [08-operations.md](./08-operations.md) — command, environment, testing, deployment, guardrail.
+9. [09-roadmap-risks.md](./09-roadmap-risks.md) — backlog, risiko, dan rekomendasi improvement.
+10. [10-ai-agent-context.md](./10-ai-agent-context.md) — konteks kerja untuk AI/coding agent.
 
 ## Ringkasan Project
 
-RetailMind adalah platform AI untuk retail/UMKM yang menyediakan:
+RetailMind adalah platform customer intelligence dan campaign distribution untuk retail/UMKM. Sistem mengubah data transaksi menjadi insight pelanggan dan aksi marketing:
 
-- Customer analytics berbasis RFM, churn risk, segmentasi, dan CLTV.
-- Dashboard React/Vite untuk visualisasi insight pelanggan.
-- AI copywriting dengan Gemini untuk campaign marketing.
-- Backend Express + SQLite untuk campaign dan webhook.
-- Integrasi WhatsApp/Fonnte untuk distribusi dan status pesan.
+- Analitik RFM, churn risk, segmentasi, dan CLTV.
+- Dashboard React untuk upload dataset dan membaca insight.
+- Inference service Python/FastAPI untuk scoring customer.
+- Backend Express + SQLite untuk campaign, segment, webhook, dan dispatch worker.
+- AI copywriting berbasis Gemini.
+- Integrasi WhatsApp/Fonnte untuk pengiriman pesan dan webhook status.
 
-## Indeks Dokumen Aktif
-
-| Dokumen | Deskripsi |
-| --- | --- |
-| [`AI_AGENT_CONTEXT.md`](./AI_AGENT_CONTEXT.md) | Konteks operasional AI agent: arsitektur, struktur repo, command, domain model, dan guardrail. |
-| [`DOC_ORCHESTRATION.md`](./DOC_ORCHESTRATION.md) | Orkestrasi semua file Markdown, status aktif/legacy, dan alur bacaan per jenis tugas. |
-| [`pipeline_documentation.md`](./pipeline_documentation.md) | Dokumentasi detail pipeline data dan ML customer analytics. |
-| [`PLAN.md`](./PLAN.md) | Arsitektur campaign distribution pipeline dari AI generation hingga channel distribusi. |
-| [`wa.md`](./wa.md) | Rencana teknis WhatsApp dan distribusi multi-channel. |
-| [`AIinput.md`](./AIinput.md) | Catatan feasibility, pseudo-labelling, backtesting, dan champion-challenger model. |
-
-## Dokumen Root yang Masih Relevan
-
-| Dokumen | Peran |
-| --- | --- |
-| [`../WEBHOOK_SETUP.md`](../WEBHOOK_SETUP.md) | Panduan setup webhook Fonnte/ngrok dan endpoint status. |
-| [`../USER_JOURNEY_BLASTING.md`](../USER_JOURNEY_BLASTING.md) | User journey fitur blasting message. |
-| [`../WHATSAPPINTEGRATIONPLAN.md`](../WHATSAPPINTEGRATIONPLAN.md) | Rencana WhatsApp lama yang detail; gunakan sebagai referensi historis. |
-| [`../PLANIMPROVEMENT.md`](../PLANIMPROVEMENT.md) | Backlog/ide improvement historis. |
-| [`../GEMINI.md`](../GEMINI.md) | Konteks lama untuk Gemini; digantikan oleh `AI_AGENT_CONTEXT.md`. |
-
-## Struktur Kode Utama
+## Peta Komponen
 
 ```text
-src/                 Frontend React/Vite
-src/components/      Komponen dashboard, analytics, campaign UI
-server/src/          Backend Express, routes, workers, webhook
-backend/data/        Dataset raw dan processed
-backend/model/       Artifact model ML
-backend/modelling/   Notebook training/eksperimen ML
-docs/                Dokumentasi terorkestrasi
+Frontend React/Vite (src/)
+  ↓ /api
+Backend Express (server/src/)
+  ├─ Campaign, segment, dataset, system API
+  ├─ SQLite database
+  ├─ Fonnte service + webhook
+  └─ Dispatch worker
+  ↓ HTTP/process call
+Inference FastAPI/Python (backend/inference/)
+  ├─ RFM aggregation
+  ├─ Predictor loading joblib model
+  ├─ Dataset calibration
+  └─ Recommendation/explanation
+  ↓
+Model/data assets (backend/model, backend/data)
 ```
 
-## Command Penting
+## Aturan Dokumentasi ke Depan
 
-Frontend:
-
-```bash
-npm run dev
-npm run build
-npm run lint
-npm run preview
-```
-
-Server:
-
-```bash
-cd server
-npm run dev
-npm start
-npm run seed
-```
-
-## Guardrail Dokumentasi
-
-- Tambahkan dokumentasi baru ke `docs/`.
-- Jangan membuat duplikasi panjang; link ke dokumen sumber.
-- Jika mengubah API, campaign flow, webhook, atau ML pipeline, update dokumentasi terkait.
-- Jangan menyimpan credential, token, API key, atau data sensitif di dokumentasi.
+- Tambahkan dokumen baru hanya di `docs/`.
+- Jangan membuat dokumen planning baru di root project.
+- Jika mengubah API, update `03-backend.md` dan dokumen domain terkait.
+- Jika mengubah inference/model, update `04-inference-process.md`.
+- Jika mengubah WhatsApp/webhook, update `05-webhook-whatsapp.md`.
+- Jika mengubah UI/journey, update `02-frontend.md` dan `06-user-journey.md`.

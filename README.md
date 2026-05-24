@@ -1,16 +1,38 @@
-# React + Vite
+# RetailMind
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+RetailMind adalah platform customer intelligence dan campaign distribution untuk retail/UMKM.
 
-Currently, two official plugins are available:
+Dokumentasi utama sudah dikonsolidasikan di folder [`docs/`](./docs/).
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Mulai dari:
 
-## React Compiler
+1. [`docs/README.md`](./docs/README.md)
+2. [`docs/01-overview.md`](./docs/01-overview.md)
+3. [`docs/02-frontend.md`](./docs/02-frontend.md)
+4. [`docs/03-backend.md`](./docs/03-backend.md)
+5. [`docs/04-inference-process.md`](./docs/04-inference-process.md)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Quick Start
 
-## Expanding the ESLint configuration
+Frontend:
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```bash
+npm install
+npm run dev
+```
+
+Backend:
+
+```bash
+cd server
+npm install
+npm run dev
+```
+
+Inference:
+
+```bash
+uvicorn backend.inference.app:app --host 0.0.0.0 --port 8000 --reload
+```
+
+Dokumen lama yang sebelumnya tersebar sudah dipindahkan ke [`docs/archive/`](./docs/archive/) sebagai referensi historis.
